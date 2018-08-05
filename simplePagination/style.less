@@ -1,0 +1,48 @@
+@font-size: 15px;
+@width: 32px;
+@height: 32px;
+@line-height: 32px;
+@margin: 5px;
+@btnpadding: 5px;
+@activebg: #2d8cf0;;
+@disablecolor: #c6c6c6;
+
+.page-container {
+  width: 100%;
+  list-style: none;
+  font-size: 0;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  .page-li {
+    display: inline-block;
+    font-size: @font-size;
+    box-sizing: inherit;
+    border: 1px solid #eaeaea;
+    min-width: @width;
+    height: @height;
+    line-height: @height;
+    margin-left: @margin;
+    cursor: pointer;
+    text-align: center;
+    &.page-li-active {
+      background: @activebg;
+      border-color: @activebg;
+      color: #ffffff;
+    }
+  }
+  .page-prev, .page-next {
+    padding: 0 @btnpadding;
+    margin-left: 0;
+    &.disable {
+      color: @disablecolor;
+    }
+  }
+  .page-next {
+    margin-left: @margin;
+  }
+  .page-ellipsis {
+    border: none;
+    cursor: default;
+  }
+}

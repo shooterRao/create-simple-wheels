@@ -1,0 +1,35 @@
+{
+  "name": "create-simple-wheels",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "rollup -c -w",
+    "build": "rollup -c"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shooterRao/create-simple-wheels.git"
+  },
+  "author": "shooterRao",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shooterRao/create-simple-wheels/issues"
+  },
+  "homepage": "https://github.com/shooterRao/create-simple-wheels#readme",
+  "devDependencies": {
+    "autoprefixer": "^9.1.0",
+    "babel-core": "^6.26.3",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-latest": "^6.24.1",
+    "less": "^3.8.0",
+    "less-loader": "^4.1.0",
+    "rollup": "^0.63.5",
+    "rollup-plugin-babel": "^3.0.7",
+    "rollup-plugin-postcss": "^1.6.2",
+    "rollup-plugin-uglify": "^4.0.0",
+    "rollup-watch": "^4.3.1"
+  }
+}
