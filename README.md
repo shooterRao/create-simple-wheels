@@ -8,13 +8,13 @@ Q: 现在目前的造了多少个轮子了？
 
 A: 很少，目前只有两个，以后会一直写
 
-1.[树组件](https://github.com/shooterRao/arcgis-webpack-demo/tree/master/simpleTree)
+1.[树组件](https://github.com/shooterRao/create-simple-wheels/tree/master/simpleTree)
 
-2.[分页组件](https://github.com/shooterRao/arcgis-webpack-demo/tree/master/simplePagination)
+2.[分页组件](https://github.com/shooterRao/create-simple-wheels/tree/master/simplePagination)
 
 Q: 技术栈和编译工具？
 
-A: 原生`ES6+`，`less`，配合`rollup`打包工具
+A: 原生`ES6+`，`less`，配合`rollup`打包工具，`UMD`规范
 
 Q: 如何运行？
 
@@ -26,4 +26,4 @@ A: `git clone git@github.com:shooterRao/create-simple-wheels.git`
 
 生产`npm run build`
 
-由于本人资历尚浅，所有代码还显得比较稚嫩，上面的组件能实现功能，抽象和封装能力还有待加强。在学习过程中，也会不断重构的。非常欢迎各路大神的PR~
+由于本人资历尚浅，所以代码还显得比较稚嫩，抽象和封装能力还有待加强。代码会在学习的过程中不断进行重构。同时非常欢迎各路大神的PR~
