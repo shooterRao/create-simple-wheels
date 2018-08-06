@@ -2,6 +2,19 @@
 
 How to use?
 
+方法一： 全局引入 `<script src="../dist/simplePagination.js"></script>`
+接着引入下面的方法
+
+方法二：AMD 
+
+```javascript
+define([simplePagination], function(simplePagination){
+  
+  引入下面方法
+
+})
+```
+
 ```javascript
 const pageNode = document.getElementById("page");
 const pager = new simplePagination(20, {
