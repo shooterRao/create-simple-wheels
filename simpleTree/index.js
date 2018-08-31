@@ -9,9 +9,10 @@ export default class simpleTree {
       animateSpeed: 'normal',
       treeData: [],
       frontIconClassName: null, // title前面的icon的className 
-      folderIconClassName: "icon-angle-right",
-      dblclick: function() {},
-      click: function() {},
+      folderIconClassName: null,// folder前面icon的className
+      dblclick: null,
+      click: null,
+      createTreeNodeContent: null, // 构造treeNodeContent时的回调函数
       templates: {
         treeWrapper: `<div class="tree-wrapper"></div>`,
         treeBaseNode: `<ul class="tree-base-node"></ul>`,
@@ -23,7 +24,7 @@ export default class simpleTree {
     this.opts = assign({}, defaultOpts, options);
     this.domRefs = {};
     this.activeItem = null;// 保存activeItem
-    this.activeTitle = null;
+    // this.activeTitle = null;
     this.domRefs.treeNodeContents = []; // 收集tree-node-content
     // 在最终渲染之前，先初始化节点、icon、绑定事件
     this.initDom()
@@ -109,14 +110,18 @@ export default class simpleTree {
     * @return this
     */
   initState() {
-    let { treeNodeContents } = this.domRefs;
+    const { treeNodeContents } = this.domRefs;
+    const { folderIconClassName, createTreeNodeContent} = this.opts;
     for (let i = 0, len = treeNodeContents.length; i < len; i++) {
       let nodeData = treeNodeContents[i].nodeData;
       // 处理icon
       if (nodeData.folder === true) {
         treeNodeContents[i].setAttribute('role','folder');
-        treeNodeContents[i].firstChild.classList.add("iconfont");
         treeNodeContents[i].firstChild.classList.add("icon-angle");
+        if(folderIconClassName) {
+          const iconStr = `<span class="tree-folder-icon ${folderIconClassName}"></span>`;
+          treeNodeContents[i].firstChild.insertAdjacentHTML('afterend',iconStr)
+        }
         if (nodeData.expand === true) {
           treeNodeContents[i].firstChild.classList.add("down");
           treeNodeContents[i].setAttribute("expand", true);
@@ -127,6 +132,7 @@ export default class simpleTree {
         treeNodeContents[i].firstChild.classList.add("iconfont");
         this.opts.frontIconClassName && treeNodeContents[i].firstChild.classList.add(this.opts.frontIconClassName);
       }
+      createTreeNodeContent && createTreeNodeContent(treeNodeContents[i], nodeData);
     }
     return this;
   }
@@ -220,38 +226,44 @@ export default class simpleTree {
     * @return this
     */
   bindEvent() {
-    // 点击事件(委托)
+    // 点击事件
     this.clickHandle = evt => {
       const e = evt || window.event;
       const target = e.target || e.srcElement;
       const tagName = target.tagName.toLowerCase();
       // 需要判断的核心是treeNodeContent这个div节点
-      let treeNodeCon = tagName === 'div' ? target : target.parentNode;
+      const treeNodeCon = tagName === 'div' ? target : target.parentNode;
       if (treeNodeCon.hasAttribute("expand")) {
         this.toggleExpand(treeNodeCon);
       } else {
-        this.toggleActive(treeNodeCon);
-        this.opts.click && this.opts.click(e, treeNodeCon.nodeData);
+        // this.toggleActive(treeNodeCon);
+        if(this.opts.click) {
+          this.toggleActive(treeNodeCon);
+          this.opts.click(e, treeNodeCon.nodeData);
+        }
       }
     };
 
-    // 双击事件(委托)（暂不用）
+    // 双击事件
     this.dblclickHandle = evt => {
       const e = evt || window.event;
       const target = e.target || e.srcElement;
       const tagName = target.tagName.toLowerCase();
-      let treeNodeCon = tagName === 'div' ? target : target.parentNode;
+      const treeNodeCon = tagName === 'div' ? target : target.parentNode;
       if(!treeNodeCon.hasAttribute('role')) {
-        let spanTitle = query(treeNodeCon,'.tree-node-title');
-        this.toggleItalic(spanTitle);
-        spanTitle = null;// 清除变量引用
+        // let spanTitle = query(treeNodeCon,'.tree-node-title');
+        // this.toggleItalic(spanTitle);
+        // spanTitle = null;// 清除变量引用
         // callback
-        this.opts.dblclick && this.opts.dblclick(e, treeNodeCon.nodeData);
+        if(this.opts.dblclick) {
+          this.toggleActive(treeNodeCon);
+          this.opts.dblclick(e, treeNodeCon.nodeData);
+        }
       }
     } 
     
     this.domRefs.treeWrapper.addEventListener("click", this.clickHandle, false);
-    // this.domRefs.treeWrapper.addEventListener('dblclick', this.dblclickHandle, false);
+    this.domRefs.treeWrapper.addEventListener('dblclick', this.dblclickHandle, false);
     return this;
   }
 
@@ -268,10 +280,6 @@ export default class simpleTree {
       treeNodeCon.firstChild.classList.add("down");
       treeNodeCon.setAttribute("expand", "true");
     }
-
-    // 高亮div
-    this.toggleActive(treeNodeCon);
-
     // slide动画
     this.slideAnimate(treeNodeCon);
     
@@ -293,11 +301,11 @@ export default class simpleTree {
     * @param  Node spanTitle
     * 切换高亮
     */
-  toggleItalic(spanTitle) {
-    this.activeTitle && this.activeTitle.classList.remove('italic');
-    spanTitle.classList.add('italic');
-    this.activeTitle = spanTitle;
-  }
+  // toggleItalic(spanTitle) {
+  //   this.activeTitle && this.activeTitle.classList.remove('italic');
+  //   spanTitle.classList.add('italic');
+  //   this.activeTitle = spanTitle;
+  // }
  
   /**
     * @method removeEvent()

@@ -111,12 +111,16 @@
       treeData: treeData,
       frontIconClassName: 'icon-wd',
       // animateSpeed: 'slow',
-      click: function (event, data) {
+      dblclick: function (event, data) {
         console.log(data);
+      },
+      createTreeNodeContent: function(node, nodeData) {
+        // console.log(node);
+        // console.log(nodeData);
       }
     })
     console.timeEnd('test');
-    console.log(tree);
+    // console.log(tree);
   </script>
 </body>
 

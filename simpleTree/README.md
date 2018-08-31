@@ -21,10 +21,17 @@ var tree = new simpleTree({
   treeData: treeData,
   frontIconClassName: 'icon-wd', // 文字前面的className
   animateSpeed: 'fast', // 折叠动画速度
-  click: function (event, data) {
-    console.log(data);
-    }
-  })
+  click: function(event, data) {
+
+  },
+  dblclick: function(event, data) {
+
+  },
+  createTreeNodeContent: function(node, nodeData) {
+    // node => dom节点
+    // nodeData => 构造节点传入的数据
+  }
+})
 ```
 
 更多配置信息请参考`index.js`和`index.html`

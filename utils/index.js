@@ -3,12 +3,12 @@
  * @param {Object} target
  * @returns {Object}
  */
-var assign = Object.assign
+const assign = Object.assign
   ? Object.assign
   : function(target) {
-      for (var i = 1; i < arguments.length; i++) {
+      for (let i = 1; i < arguments.length; i++) {
         var source = arguments[i];
-        for (var key in source) {
+        for (let key in source) {
           if (Object.prototype.hasOwnProperty.call(source, key)) {
             target[key] = source[key];
           }
@@ -18,12 +18,29 @@ var assign = Object.assign
     };
 
 /**
+ * 对象深拷贝
+ * @param {Object} data
+ * @returns {Object} map[key]
+ */
+const deepCopy = obj => {
+  if (typeof obj !== "object") return;
+  const newObj = obj instanceof Array ? [] : {};
+  for (var key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      newObj[key] =
+        typeof obj[key] === "object" ? deepCopy(obj[key]) : obj[key];
+    }
+  }
+  return newObj;
+};
+
+/**
  * createNode
  * @param {String} htmlStr
  * @returns {DomNode}
  */
-var createNode = function(htmlStr) {
-  var div = document.createElement("div");
+const createNode = htmlStr => {
+  const div = document.createElement("div");
   div.innerHTML = htmlStr;
   return div.childNodes[0];
 };
@@ -34,7 +51,7 @@ var createNode = function(htmlStr) {
  * @param {String} selector
  * @returns {DomNode}
  */
-var query = function(el, selector) {
+const query = (el, selector) => {
   return el.querySelector(selector)
     ? el.querySelector(selector)
     : console.error("Cannot find " + selector + " of el!");
@@ -46,7 +63,7 @@ var query = function(el, selector) {
  * @param {String} selector
  * @returns {NodeList}
  */
-var queryAll = function(el, selector) {
+const queryAll = (el, selector) => {
   return el.querySelectorAll(selector);
 };
 
@@ -57,16 +74,16 @@ var queryAll = function(el, selector) {
  * @param {Object} options
  * @returns {Function}
  */
-var throttle = function(func, wait, options) {
-  var context, args, result;
+const throttle = (func, wait, options) => {
+  let context, args, result;
 
-  var timeout = null;
+  let timeout = null;
 
-  var previous = 0;
+  let previous = 0;
 
   if (!options) options = {};
 
-  var later = function() {
+  const later = function() {
     previous = options.leading === false ? 0 : Date.now();
     timeout = null;
     result = func.apply(context, args);
@@ -75,7 +92,7 @@ var throttle = function(func, wait, options) {
   };
 
   return function() {
-    var now = Date.now();
+    const now = Date.now();
 
     if (!previous && options.leading === false) {
       previous = now;
@@ -110,10 +127,10 @@ var throttle = function(func, wait, options) {
  * @param {Boolean} immediate
  * @returns
  */
-var debounce = function(func, wait, immediate) {
-  var timeout, args, context, timestamp, result;
+const debounce = (func, wait, immediate) => {
+  let timeout, args, context, timestamp, result;
 
-  var later = function() {
+  const later = function() {
     var last = new Date().getTime() - timestamp;
     if (last < wait && last >= 0) {
       timeout = setTimeout(later, wait - last); // wait - last可以少执行很多次
@@ -138,7 +155,7 @@ var debounce = function(func, wait, immediate) {
 
     // timeout判断很重要，它是判断是否首次触发的重要字段
 
-    var callNow = immediate && !timeout;
+    const callNow = immediate && !timeout;
 
     // 首次timeout为肯定为null
     if (!timeout) {
@@ -155,12 +172,13 @@ var debounce = function(func, wait, immediate) {
     return result;
   };
 };
+
 /**
  * 判断是否为dom节点
  * @param {DomNode} item
  * @returns
  */
-var isDOM = item => {
+const isDOM = item => {
   return typeof HTMLElement === "function"
     ? item instanceof HTMLElement
     : item &&
@@ -169,4 +187,36 @@ var isDOM = item => {
         typeof item.nodeName === "string";
 };
 
-export { assign, createNode, debounce, throttle, query, queryAll, isDOM };
+/**
+ * 判断对象类型
+ * @param {Object} obj
+ * @returns {String} map[key]
+ */
+const typeOf = obj => {
+  const toString = Object.prototype.toString;
+  const map = {
+    "[object Boolean]": "boolean",
+    "[object Number]": "number",
+    "[object String]": "string",
+    "[object Function]": "function",
+    "[object Array]": "array",
+    "[object Date]": "date",
+    "[object RegExp]": "regExp",
+    "[object Undefined]": "undefined",
+    "[object Null]": "null",
+    "[object Object]": "object"
+  };
+  return map[toString.call(obj)];
+};
+
+export {
+  assign,
+  deepCopy,
+  createNode,
+  debounce,
+  throttle,
+  query,
+  queryAll,
+  isDOM,
+  typeOf
+};
