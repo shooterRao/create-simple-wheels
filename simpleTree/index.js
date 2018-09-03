@@ -41,7 +41,7 @@ export default class simpleTree {
     */
   initDom() {
     if(!(this.opts.treeData instanceof Array)) {
-      throw new TypeError("treeData must be a Array!");
+      throw new TypeError("treeData must be an Array!");
     }
     this.domRefs.treeWrapper = createNode(this.opts.templates.treeWrapper);
     this.domRefs.treeBaseNode = createNode(this.opts.templates.treeBaseNode);
@@ -318,13 +318,13 @@ export default class simpleTree {
       this.clickHandle,
       false
     );
-    // this.domRefs.treeWrapper.removeEventListener(
-    //   "dblclick",
-    //   this.dblclickHandle,
-    //   false
-    // );
+    this.domRefs.treeWrapper.removeEventListener(
+      "dblclick",
+      this.dblclickHandle,
+      false
+    );
     this.clickHandle = null;
-    // this.dblclickHandle = null;
+    this.dblclickHandle = null;
   }
 
   /**
