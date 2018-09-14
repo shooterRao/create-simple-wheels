@@ -1,3 +1,5 @@
+/*eslint-disable*/
+
 /**
  * 对象浅拷贝
  * @param {Object} target
@@ -22,13 +24,12 @@ const assign = Object.assign
  * @param {Object} data
  * @returns {Object} map[key]
  */
-const deepCopy = obj => {
-  if (typeof obj !== "object") return;
+const deepCopy = (obj) => {
+  if (typeof obj !== 'object') return;
   const newObj = obj instanceof Array ? [] : {};
   for (var key in obj) {
     if (obj.hasOwnProperty(key)) {
-      newObj[key] =
-        typeof obj[key] === "object" ? deepCopy(obj[key]) : obj[key];
+      newObj[key] = typeof obj[key] === 'object' ? deepCopy(obj[key]) : obj[key];
     }
   }
   return newObj;
@@ -39,8 +40,8 @@ const deepCopy = obj => {
  * @param {String} htmlStr
  * @returns {DomNode}
  */
-const createNode = htmlStr => {
-  const div = document.createElement("div");
+const createNode = (htmlStr) => {
+  const div = document.createElement('div');
   div.innerHTML = htmlStr;
   return div.childNodes[0];
 };
@@ -54,7 +55,7 @@ const createNode = htmlStr => {
 const query = (el, selector) => {
   return el.querySelector(selector)
     ? el.querySelector(selector)
-    : console.error("Cannot find " + selector + " of el!");
+    : console.error('Cannot find ' + selector + ' of el!');
 };
 
 /**
@@ -178,13 +179,10 @@ const debounce = (func, wait, immediate) => {
  * @param {DomNode} item
  * @returns
  */
-const isDOM = item => {
-  return typeof HTMLElement === "function"
+const isDOM = (item) => {
+  return typeof HTMLElement === 'function'
     ? item instanceof HTMLElement
-    : item &&
-        typeof item === "object" &&
-        item.nodeType === 1 &&
-        typeof item.nodeName === "string";
+    : item && typeof item === 'object' && item.nodeType === 1 && typeof item.nodeName === 'string';
 };
 
 /**
@@ -192,31 +190,21 @@ const isDOM = item => {
  * @param {Object} obj
  * @returns {String} map[key]
  */
-const typeOf = obj => {
+const typeOf = (obj) => {
   const toString = Object.prototype.toString;
   const map = {
-    "[object Boolean]": "boolean",
-    "[object Number]": "number",
-    "[object String]": "string",
-    "[object Function]": "function",
-    "[object Array]": "array",
-    "[object Date]": "date",
-    "[object RegExp]": "regExp",
-    "[object Undefined]": "undefined",
-    "[object Null]": "null",
-    "[object Object]": "object"
+    '[object Boolean]': 'boolean',
+    '[object Number]': 'number',
+    '[object String]': 'string',
+    '[object Function]': 'function',
+    '[object Array]': 'array',
+    '[object Date]': 'date',
+    '[object RegExp]': 'regExp',
+    '[object Undefined]': 'undefined',
+    '[object Null]': 'null',
+    '[object Object]': 'object'
   };
   return map[toString.call(obj)];
 };
 
-export {
-  assign,
-  deepCopy,
-  createNode,
-  debounce,
-  throttle,
-  query,
-  queryAll,
-  isDOM,
-  typeOf
-};
+export { assign, deepCopy, createNode, debounce, throttle, query, queryAll, isDOM, typeOf };

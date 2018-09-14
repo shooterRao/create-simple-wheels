@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "rollup -c -w",
-    "build": "rollup -c"
+    "build": "rollup -c",
+    "lint-fix": "eslint --fix simpleTree/*.js"
   },
   "repository": {
     "type": "git",
@@ -24,8 +25,12 @@
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-latest": "^6.24.1",
+    "eslint": "^5.5.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0",
     "less": "^3.8.0",
     "less-loader": "^4.1.0",
+    "prettier": "1.14.2",
     "rollup": "^0.63.5",
     "rollup-plugin-babel": "^3.0.7",
     "rollup-plugin-postcss": "^1.6.2",
