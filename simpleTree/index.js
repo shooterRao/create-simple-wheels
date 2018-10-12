@@ -80,6 +80,7 @@ export default class simpleTree {
       treeNodeContent.style.paddingLeft = `${level * this.opts.paddingLeft}px`;
       // 把数据加到div节点上，方便点击时查到
       treeNodeContent.nodeData = data[i];
+      // 收集treeNodeContent引用
       this.domRefs.treeNodeContents.push(treeNodeContent);
       treeNode.appendChild(treeNodeContent);
       group.appendChild(treeNode);
@@ -146,7 +147,7 @@ export default class simpleTree {
   slideAnimate(treeNodeCon) {
     // requestAnimationFrame兼容性处理
     if (!window.requestAnimationFrame) {
-      window.requestAnimationFrame = (fn) => {
+      window.requestAnimationFrame = fn => {
         setTimeout(fn, 16.7);
       };
     }
@@ -219,7 +220,7 @@ export default class simpleTree {
    */
   bindEvent() {
     // 点击事件
-    this.clickHandle = (evt) => {
+    this.clickHandle = evt => {
       const e = evt || window.event;
       const target = e.target || e.srcElement;
       const tagName = target.tagName.toLowerCase();
@@ -235,7 +236,7 @@ export default class simpleTree {
     };
 
     // 双击事件
-    this.dblclickHandle = (evt) => {
+    this.dblclickHandle = evt => {
       const e = evt || window.event;
       const target = e.target || e.srcElement;
       const tagName = target.tagName.toLowerCase();
@@ -326,7 +327,14 @@ export default class simpleTree {
    * @return null
    */
   destroyed() {
+    let i = this.domRefs.treeNodeContents.length;
+    while (i--) {
+      this.domRefs.treeNodeContents[i] = null;
+    }
     this.removeEvent();
-    this.opts.baseNode.removeChild(this.domRefs.treeWrapper);
+    this.domRefs.treeWrapper = null;
+    this.opts.baseNode.removeChild(this.opts.baseNode.children[0]);
   }
 }
+
+simpleTree.version = '1.0';

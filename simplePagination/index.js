@@ -62,7 +62,7 @@ export default class simplePagination {
    */
   bindEvent() {
     const { prevBtnCN, nextBtnCN } = this.opts;
-    this.clickHandle = (evt) => {
+    this.clickHandle = evt => {
       const e = evt || window.event;
       const target = e.target || e.srcElement;
       if (target.dataset.page) {
@@ -178,3 +178,5 @@ export default class simplePagination {
     this.clickHandle = null;
   }
 }
+
+simplePagination.version = '1.0';
