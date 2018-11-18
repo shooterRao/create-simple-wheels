@@ -2,16 +2,16 @@ import babel from 'rollup-plugin-babel'
 import { uglify } from 'rollup-plugin-uglify'
 import postcss from 'rollup-plugin-postcss'
 
-const wheelName = 'simpleTree';
+const wheelName = 'simpleAnimate';
 
 export default {
   input: `${wheelName}/index.js`,
   output: {
     file: `dist/${wheelName}.js`,
     format: 'umd',
-    name: wheelName
+    name: wheelName,
+    sourceMap: true, // debug use 
   },
-  sourceMap: 'inline', // debug use 
   plugins: [
     postcss({
       extract: false,

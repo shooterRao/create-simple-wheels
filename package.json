@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "rollup -c -w",
     "build": "rollup -c",
-    "lint-fix": "eslint --fix simpleTree/*.js"
+    "lint-fix": "eslint --fix *.js"
   },
   "repository": {
     "type": "git",

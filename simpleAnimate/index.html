@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <style>
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      .con {
+        margin: 0 200px;
+        height: 2000px;
+      }
+      .progress {
+        height: 30px;
+        width: 0;
+        background: green;
+        position: relative;
+      }
+      .progress::before {
+        content: '';
+        display: block;
+        width: 300px;
+        height: 30px;
+        background: rgba(0, 0, 0, 0.2);
+      }
+      .to-top {
+        width: 100px;
+        height: 50px;
+        position: fixed;
+        bottom: 100px;
+        border: 1px solid black;
+        line-height: 50px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s linear;
+        right: -110px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="con">
+      <h1>数字动效</h1>
+      <h2 class="num">0</h2>
+      <h1>progress</h1>
+      <div class="progress"></div>
+    </div>
+    <div class="to-top">TO TOP</div>
+    <script src="../dist/simpleAnimate.js"></script>
+    <script>
+      // 增加动画
+      simpleAnimate.extend({
+        easeInCubic(t, b, c, d) {
+          return c * (t /= d) * t * t + b;
+        },
+        easeOutCubic(t, b, c, d) {
+          return c * ((t = t / d - 1) * t * t + 1) + b;
+        }
+      });
+
+      // 数字动效
+      const num = document.querySelector('.num');
+      window.simpleAnimate.play({
+        to: 100,
+        from: 0,
+        during: 2000,
+        type: 'easeOutQuad',
+        callback(v) {
+          num.innerHTML = ~~v;
+        }
+      });
+      // 进度条
+      const progressNode = document.querySelector('.progress');
+      window.simpleAnimate.play({
+        to: 300,
+        from: 0,
+        during: 2000,
+        callback(v) {
+          progressNode.style.width = `${v}px`;
+        }
+      });
+      // 返回顶部
+      const topBtn = document.querySelector('.to-top');
+      window.onscroll = function() {
+        if (document.documentElement.scrollTop > 300) {
+          topBtn.style.right = '10px';
+        } else {
+          topBtn.style.right = `-110px`;
+        }
+      };
+      topBtn.addEventListener('click', function() {
+        const to = 0;
+        const from = document.documentElement.scrollTop;
+        window.simpleAnimate.play({
+          to,
+          from,
+          during: 300,
+          callback(v) {
+            document.documentElement.scrollTop = v;
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

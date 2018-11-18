@@ -1,5 +1,7 @@
 ## 简单的树组件
 
+[预览DEMO](http://shooterblog.site/create-simple-wheels/simpleTree/index.html) 
+
 How to use?
 
 方法一： 全局引入 `<script src="../dist/simpleTree.js"></script>`
@@ -35,5 +37,3 @@ var tree = new simpleTree({
 ```
 
 更多配置信息请参考`index.js`和`index.html`
-
-[预览DEMO](http://shooterblog.site/create-simple-wheels/simpleTree/index.html) 
