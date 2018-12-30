@@ -1,5 +1,5 @@
 import './style.less';
-import { assign, isDOM } from '../utils/index';
+import { assign, isDOM } from '../../utils/index';
 
 export default class simplePagination {
   constructor(totalPage, opts) {

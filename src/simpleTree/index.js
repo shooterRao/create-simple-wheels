@@ -1,5 +1,5 @@
 import './index.less';
-import { assign, createNode } from '../utils/index';
+import { assign, createNode } from '../../utils/index';
 
 export default class simpleTree {
   constructor(options) {
