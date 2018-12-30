@@ -5,12 +5,12 @@ import postcss from 'rollup-plugin-postcss'
 const wheelName = 'simpleAnimate';
 
 export default {
-  input: `${wheelName}/index.js`,
+  input: `src/${wheelName}/index.js`,
   output: {
     file: `dist/${wheelName}.js`,
     format: 'umd',
     name: wheelName,
-    sourceMap: true, // debug use 
+    sourceMap: true, // debug use
   },
   plugins: [
     postcss({
