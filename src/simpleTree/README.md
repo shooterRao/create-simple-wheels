@@ -1,17 +1,17 @@
 ## 简单的树组件
 
-[预览DEMO](http://shooterblog.site/create-simple-wheels/simpleTree/index.html) 
+[预览DEMO](http://shooterblog.site/create-simple-wheels/src/simpleTree/index.html)
 
 How to use?
 
 方法一： 全局引入 `<script src="../dist/simpleTree.js"></script>`
 接着引入下面的方法
 
-方法二：AMD 
+方法二：AMD
 
 ```javascript
 define([simpleTree], function(simpleTree){
-  
+
   引入下面方法
 
 })

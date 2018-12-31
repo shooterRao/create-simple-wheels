@@ -1,6 +1,6 @@
 ## 不到 1kb 的小型动画库
 
-[预览 DEMO](http://shooterblog.site/create-simple-wheels/simpleAnimate/index.html)
+[预览 DEMO](http://shooterblog.site/create-simple-wheels/src/simpleAnimate/index.html)
 
 How to use?
 
@@ -24,7 +24,7 @@ define([simpleAnimate], function(simpleAnimate) {
     to: 目标值, (默认1000)
     during: 持续时间, (默认300ms)
     type: 动画函数 (默认'easeInQuad')
-    callback: 回调 
+    callback: 回调
   }
 */
 simpleAnimate.play({
@@ -32,7 +32,7 @@ simpleAnimate.play({
   from: 0,
   during: 2000,
   callback(v) {
-    
+
   }
 })
 
@@ -53,7 +53,7 @@ simpleAnimate.play({
   during: 2000,
   type: 'easeInCubic',
   callback(v) {
-    
+
   }
 })
 
