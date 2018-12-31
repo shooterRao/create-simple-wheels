@@ -2,6 +2,7 @@
 @bg-hover: #e4e8f1;
 @bg-active: #0489e0;
 @conent-height: 36px;
+@preClsName: simple-tree;
 
 @font-face {
   font-family: "iconfont";
@@ -33,7 +34,8 @@
 .icon-wd:before {
   content: "\e66a";
 }
-.tree-wrapper {
+
+.@{preClsName}.tree-wrapper {
   width: 100%;
   user-select: none;// 解决多次点击出现蓝色背景
   ul {

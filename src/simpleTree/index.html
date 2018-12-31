@@ -36,16 +36,16 @@
   <div id="tree">
 
   </div>
-  <script src="../dist/simpleTree.js"></script>
+  <script src="../../dist/simpleTree.js"></script>
   <script>
     var treeData = [{
-      title: '业务热点', id: '0', folder: false
+      title: '业务热点', id: '0',
     },
     {
-      title: '资源监测', id: '1', folder: true, expand: true,
+      title: '资源监测', id: '1', expand: true,
       children: [
         {
-          title: '供应计划', id: '2', folder: true, expand: true,
+          title: '供应计划', id: '2', expand: true,
           children: [
             {
               title: '土地储备', id: '3'
@@ -71,13 +71,13 @@
       ]
     },
     {
-      title: '资源监测', id: '1', folder: true, expand: true,
+      title: '资源监测', id: '1', expand: true,
       children: [
         {
-          title: '供应计划', id: '2', folder: true, expand: true,
+          title: '供应计划', id: '2', expand: true,
           children: [
             {
-              title: '资源监测', id: '1', folder: true, expand: true,
+              title: '资源监测', id: '1', expand: true,
               children: [
                 {
                   title: '土地供应', id: '5'
@@ -109,9 +109,8 @@
     var tree = new simpleTree({
       baseNode: document.getElementById('tree'),
       treeData: treeData,
-      frontIconClassName: 'icon-wd',
-      // animateSpeed: 'slow',
-      dblclick: function (event, data) {
+      frontIconClassName: 'iconfont icon-wd',
+      click: function (event, data) {
         console.log(data);
       },
       createTreeNodeContent: function(node, nodeData) {

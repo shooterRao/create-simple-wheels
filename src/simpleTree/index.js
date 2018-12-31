@@ -1,5 +1,8 @@
 import './index.less';
-import { assign, createNode } from '../../utils/index';
+import { assign, createNode, hasChild } from '../../utils/index';
+import animate from '../simpleAnimate/index';
+
+const preClsName = 'simple-tree';
 
 export default class simpleTree {
   constructor(options) {
@@ -9,12 +12,11 @@ export default class simpleTree {
       animateSpeed: 'normal',
       treeData: [],
       frontIconClassName: null, // title前面的icon的className
-      folderIconClassName: null, // folder前面icon的className
       dblclick: null,
       click: null,
       createTreeNodeContent: null, // 构造treeNodeContent时的回调函数
       templates: {
-        treeWrapper: '<div class="tree-wrapper"></div>',
+        treeWrapper: `<div class="${preClsName} tree-wrapper"></div>`,
         treeBaseNode: '<ul class="tree-base-node"></ul>',
         treeNode: '<li class="tree-node"></li>',
         treeGroup: '<ul class="tree-group"></ul>',
@@ -45,20 +47,19 @@ export default class simpleTree {
     }
     this.domRefs.treeWrapper = createNode(this.opts.templates.treeWrapper);
     this.domRefs.treeBaseNode = createNode(this.opts.templates.treeBaseNode);
-    this.initTree(this.domRefs.treeWrapper, this.domRefs.treeBaseNode, this.opts.treeData, 0);
+    this.initTree(this.domRefs.treeWrapper, this.domRefs.treeBaseNode, this.opts.treeData);
     return this;
   }
 
   /**
    * @method initTree()
-   * 遍历data,递归生成 ul -> li -> ul...
-   * 这里用多少次appendChild都不会引起浏览器回流导致页面卡顿
+   * 遍历data,递归生成 ul -> li -> ul
    * @param {Node} group treeGroup(UL)
    * @param {array} data 数据源
    * @param {number} level 层级控制
    * @return null
    */
-  initTree(parentNode, group, data, level) {
+  initTree(parentNode, group, data, level = 0) {
     let treeNode;
     let treeNodeContent; // li -> div
     // data为空情况下，加个空的ul进去，防止133行报错
@@ -85,11 +86,13 @@ export default class simpleTree {
       treeNode.appendChild(treeNodeContent);
       group.appendChild(treeNode);
       parentNode.appendChild(group);
-      let groupLevel = level;
-      if (data[i].folder === true && data[i].children.length >= 0) {
-        groupLevel++;
+      // let groupLevel = level;
+      // if (data[i].folder === true && data[i].children.length >= 0) {
+      // console.log(this);
+      if (hasChild(data[i])) {
+        // groupLevel++;
         const treeGroup = createNode(this.opts.templates.treeGroup);
-        this.initTree(treeNode, treeGroup, data[i].children, groupLevel);
+        this.initTree(treeNode, treeGroup, data[i].children, level + 1);
       }
     }
   }
@@ -102,17 +105,13 @@ export default class simpleTree {
    */
   initState() {
     const { treeNodeContents } = this.domRefs;
-    const { folderIconClassName, createTreeNodeContent, frontIconClassName } = this.opts;
+    const { createTreeNodeContent, frontIconClassName } = this.opts;
     for (let i = 0, len = treeNodeContents.length; i < len; i++) {
       const { nodeData } = treeNodeContents[i];
       // 处理icon
-      if (nodeData.folder === true) {
+      if (hasChild(nodeData)) {
         treeNodeContents[i].setAttribute('role', 'folder');
         treeNodeContents[i].firstChild.classList.add('icon-angle');
-        if (folderIconClassName) {
-          const iconStr = `<span class="tree-folder-icon ${folderIconClassName}"></span>`;
-          treeNodeContents[i].firstChild.insertAdjacentHTML('afterend', iconStr);
-        }
         if (nodeData.expand === true) {
           treeNodeContents[i].firstChild.classList.add('down');
           treeNodeContents[i].setAttribute('expand', true);
@@ -120,8 +119,9 @@ export default class simpleTree {
           treeNodeContents[i].nextElementSibling.style.display = 'none';
         }
       } else {
-        treeNodeContents[i].firstChild.classList.add('iconfont');
-        frontIconClassName && treeNodeContents[i].firstChild.classList.add(frontIconClassName);
+        frontIconClassName.split(' ').forEach(v => {
+          treeNodeContents[i].firstChild.classList.add(v);
+        });
       }
       createTreeNodeContent && createTreeNodeContent(treeNodeContents[i], nodeData);
     }
@@ -134,81 +134,7 @@ export default class simpleTree {
    * @return null
    */
   appendBaseNode() {
-    // 无须使用createDocumentFragment，底层已经优化，最终只会appendChild一次
-    // 所以只会回流一次
     this.opts.baseNode.appendChild(this.domRefs.treeWrapper);
-  }
-
-  /**
-   * @method slideAnimate()
-   * slide动画
-   * @return null
-   */
-  slideAnimate(treeNodeCon) {
-    // requestAnimationFrame兼容性处理
-    if (!window.requestAnimationFrame) {
-      window.requestAnimationFrame = fn => {
-        setTimeout(fn, 16.7);
-      };
-    }
-    // 控制速率
-    let speed;
-    switch (this.opts.animateSpeed) {
-      case 'normal':
-        speed = 10;
-        break;
-      case 'fast':
-        speed = 5;
-        break;
-      case 'slow':
-        speed = 15;
-        break;
-      default:
-        speed = 10;
-        break;
-    }
-    const group = treeNodeCon.nextElementSibling;
-    if (treeNodeCon.getAttribute('expand') === 'false') {
-      // ---slideUp
-      // offsetHeight = group.offsetHeight;
-      const { offsetHeight } = group;
-      group.style.overflow = 'hidden';
-      let distance = offsetHeight;
-      const target = 0;
-      const step = () => {
-        distance -= Math.ceil(offsetHeight / speed);
-        group.style.height = `${distance}px`;
-        if (distance - target > 0) {
-          window.requestAnimationFrame(step);
-        } else {
-          group.style.height = '';
-          group.style.display = 'none';
-          group.style.overflow = '';
-        }
-      };
-      step();
-    } else {
-      // slideDown
-      group.style.display = 'block';
-      group.style.overflow = 'hidden';
-      // offsetHeight = group.offsetHeight;
-      const { offsetHeight } = group;
-      group.style.height = 0;
-      // 0 -> offsetHeight
-      const distance = offsetHeight;
-      let start = 0;
-      const step = () => {
-        start += Math.ceil(distance / speed);
-        group.style.height = `${start}px`;
-        if (distance - start > 0) {
-          window.requestAnimationFrame(step);
-        } else {
-          // 恢复默认值(重要!!)
-          group.style.height = '';
-        }
-      };
-      step();
-    }
   }
 
   /**
@@ -227,9 +153,8 @@ export default class simpleTree {
       // 需要判断的核心是treeNodeContent这个div节点
       const treeNodeCon = tagName === 'div' ? target : target.parentNode;
       if (treeNodeCon.hasAttribute('expand')) {
-        this.toggleExpand(treeNodeCon);
+        simpleTree.toggleExpand(treeNodeCon);
       } else if (this.opts.click) {
-        // this.toggleActive(treeNodeCon);
         this.toggleActive(treeNodeCon);
         this.opts.click(e, treeNodeCon.nodeData);
       }
@@ -242,9 +167,6 @@ export default class simpleTree {
       const tagName = target.tagName.toLowerCase();
       const treeNodeCon = tagName === 'div' ? target : target.parentNode;
       if (!treeNodeCon.hasAttribute('role')) {
-        // let spanTitle = query(treeNodeCon,'.tree-node-title');
-        // this.toggleItalic(spanTitle);
-        // spanTitle = null;// 清除变量引用
         // callback
         if (this.opts.dblclick) {
           this.toggleActive(treeNodeCon);
@@ -259,23 +181,6 @@ export default class simpleTree {
   }
 
   /**
-   * @method toggleExpand()
-   * 折叠切换
-   * @return null
-   */
-  toggleExpand(treeNodeCon) {
-    if (treeNodeCon.getAttribute('expand') === 'true') {
-      treeNodeCon.firstChild.classList.remove('down');
-      treeNodeCon.setAttribute('expand', 'false');
-    } else {
-      treeNodeCon.firstChild.classList.add('down');
-      treeNodeCon.setAttribute('expand', 'true');
-    }
-    // slide动画
-    this.slideAnimate(treeNodeCon);
-  }
-
-  /**
    * @method toggleActive()
    * @param  Node treeNodeCon
    * 切换高亮
@@ -285,17 +190,6 @@ export default class simpleTree {
     treeNodeCon.classList.add('active');
     this.activeItem = treeNodeCon;
   }
-
-  /**
-   * @method toggleItalic()
-   * @param  Node spanTitle
-   * 切换高亮
-   */
-  // toggleItalic(spanTitle) {
-  //   this.activeTitle && this.activeTitle.classList.remove('italic');
-  //   spanTitle.classList.add('italic');
-  //   this.activeTitle = spanTitle;
-  // }
 
   /**
    * @method removeEvent()
@@ -335,6 +229,69 @@ export default class simpleTree {
     this.domRefs.treeWrapper = null;
     this.opts.baseNode.removeChild(this.opts.baseNode.children[0]);
   }
+
+  /**
+   * @method toggleExpand()
+   * 折叠切换
+   * @return null
+   */
+  static toggleExpand(treeNodeCon) {
+    if (treeNodeCon.getAttribute('expand') === 'true') {
+      treeNodeCon.firstChild.classList.remove('down');
+      treeNodeCon.setAttribute('expand', 'false');
+    } else {
+      treeNodeCon.firstChild.classList.add('down');
+      treeNodeCon.setAttribute('expand', 'true');
+    }
+    // slide动画
+    simpleTree.slideAnimate(treeNodeCon);
+  }
+
+  /**
+   * @method slideAnimate()
+   * slide动画
+   * @return null
+   */
+  static slideAnimate(treeNodeCon) {
+    const group = treeNodeCon.nextElementSibling;
+    if (treeNodeCon.getAttribute('expand') === 'false') {
+      // slideUp
+      const { offsetHeight } = group;
+      group.style.overflow = 'hidden';
+      const opts = {
+        to: 0,
+        from: offsetHeight,
+        during: 200,
+        type: 'linear',
+        callback(value) {
+          group.style.height = `${value}px`;
+        }
+      };
+      animate.play(opts).then(() => {
+        group.style.height = '';
+        group.style.display = 'none';
+        group.style.overflow = '';
+      });
+    } else {
+      // slideDown
+      group.style.display = 'block';
+      group.style.overflow = 'hidden';
+      const { offsetHeight } = group;
+      const opts = {
+        to: offsetHeight,
+        from: 0,
+        during: 200,
+        type: 'linear',
+        callback(value) {
+          group.style.height = `${value}px`;
+        }
+      };
+      animate.play(opts).then(() => {
+        group.style.height = '';
+        group.style.overflow = '';
+      });
+    }
+  }
 }
 
-simpleTree.version = '1.0';
+simpleTree.version = '1.1.0';

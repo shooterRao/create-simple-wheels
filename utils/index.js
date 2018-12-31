@@ -24,7 +24,7 @@ const assign = Object.assign
  * @param {Object} data
  * @returns {Object} map[key]
  */
-const deepCopy = (obj) => {
+const deepCopy = obj => {
   if (typeof obj !== 'object') return;
   const newObj = obj instanceof Array ? [] : {};
   for (var key in obj) {
@@ -40,7 +40,7 @@ const deepCopy = (obj) => {
  * @param {String} htmlStr
  * @returns {DomNode}
  */
-const createNode = (htmlStr) => {
+const createNode = htmlStr => {
   const div = document.createElement('div');
   div.innerHTML = htmlStr;
   return div.childNodes[0];
@@ -179,7 +179,7 @@ const debounce = (func, wait, immediate) => {
  * @param {DomNode} item
  * @returns
  */
-const isDOM = (item) => {
+const isDOM = item => {
   return typeof HTMLElement === 'function'
     ? item instanceof HTMLElement
     : item && typeof item === 'object' && item.nodeType === 1 && typeof item.nodeName === 'string';
@@ -190,7 +190,7 @@ const isDOM = (item) => {
  * @param {Object} obj
  * @returns {String} map[key]
  */
-const typeOf = (obj) => {
+const typeOf = obj => {
   const toString = Object.prototype.toString;
   const map = {
     '[object Boolean]': 'boolean',
@@ -207,4 +207,20 @@ const typeOf = (obj) => {
   return map[toString.call(obj)];
 };
 
-export { assign, deepCopy, createNode, debounce, throttle, query, queryAll, isDOM, typeOf };
+// 判断是否有子节点
+const hasChild = nodeData => {
+  return nodeData.children && nodeData.children.length !== 0;
+};
+
+export {
+  assign,
+  deepCopy,
+  createNode,
+  debounce,
+  throttle,
+  query,
+  queryAll,
+  isDOM,
+  typeOf,
+  hasChild
+};
