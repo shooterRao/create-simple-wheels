@@ -8,11 +8,11 @@ Q: 目前造了多少个轮子了？
 
 A: 3个
 
-1.[树组件](https://github.com/shooterRao/create-simple-wheels/tree/master/simpleTree)
+1.[树组件](https://github.com/shooterRao/create-simple-wheels/tree/master/src/simpleTree)
 
-2.[分页组件](https://github.com/shooterRao/create-simple-wheels/tree/master/simplePagination)
+2.[分页组件](https://github.com/shooterRao/create-simple-wheels/tree/master/src/simplePagination)
 
-3.[迷你动画库](https://github.com/shooterRao/create-simple-wheels/tree/master/simpleAnimate)
+3.[迷你动画库](https://github.com/shooterRao/create-simple-wheels/tree/master/src/simpleAnimate)
 
 Q: 技术栈和编译工具？
 
