@@ -11,6 +11,7 @@ module.exports = {
     'comma-dangle': [2, 'never'],
     'arrow-parens': [2, 'as-needed'], // 箭头函数参数只有一个时无需加括号
     'no-return-assign': 0,
-    'no-param-reassign': 0
+    'no-param-reassign': 0,
+    'no-console': 0
   }
 };

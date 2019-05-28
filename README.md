@@ -14,6 +14,8 @@ A: 3个
 
 3.[迷你动画库](https://github.com/shooterRao/create-simple-wheels/tree/master/src/simpleAnimate)
 
+4.[轮询工具类](https://github.com/shooterRao/create-simple-wheels/tree/master/src/simplePollingAction)
+
 Q: 技术栈和编译工具？
 
 A: 原生`ES6+`，`less`，配合`rollup`打包工具，编译成`UMD`规范

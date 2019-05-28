@@ -2,7 +2,7 @@ import babel from 'rollup-plugin-babel'
 import { uglify } from 'rollup-plugin-uglify'
 import postcss from 'rollup-plugin-postcss'
 
-const wheelName = 'simpleTree';
+const wheelName = 'simplePollingAction';
 
 export default {
   input: `src/${wheelName}/index.js`,

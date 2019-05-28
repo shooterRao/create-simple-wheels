@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script src="../../dist/simplePollingAction.js"></script>
+  <script>
+    const { simplePollingAction } = window;
+
+    const callback = (() => {
+      let n = 1;
+      return () => {
+        console.log(n);
+        n++;
+      }
+    })();
+
+    const poll = new simplePollingAction(callback, 1000, true).start();
+    // poll.start();
+    setTimeout(() => {
+      poll.cancel();
+    }, 5000)
+  </script>
+</body>
+</html>
