@@ -6,7 +6,7 @@ A: 最近在做项目的时候，开始尝试自己写轮子(组件)，并已经
 
 Q: 目前造了多少个轮子了？
 
-A: 3个
+A: 4个
 
 1.[树组件](https://github.com/shooterRao/create-simple-wheels/tree/master/src/simpleTree)
 
