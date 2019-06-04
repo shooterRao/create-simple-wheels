@@ -55,6 +55,8 @@ simpleAnimate.play({
   callback(v) {
 
   }
+}).then(() => {
+  // 动画完成...
 })
 
 ```

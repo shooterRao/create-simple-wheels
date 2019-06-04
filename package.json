@@ -1,12 +1,13 @@
 {
-  "name": "create-simple-wheels",
+  "name": "simplewheels",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "./node_modules/.bin/rollup --sourcemap -c -w",
     "build": "./node_modules/.bin/rollup -c",
+    "buildAll": "./node_modules/.bin/rollup -c rollup.config.prod.js",
     "lint": "eslint --fix *.js"
   },
   "repository": {

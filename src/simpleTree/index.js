@@ -274,6 +274,11 @@ export default class simpleTree {
     }
   }
 
+  /**
+   * @method transitionendHandle()
+   * 过渡事件
+   * @return null
+   */
   static transitionendHandle(el) {
     const isShow = el.style.height !== '0px';
     if (isShow) {
