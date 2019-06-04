@@ -41,39 +41,46 @@
   ul {
     list-style: none;
   }
-  .tree-node-content {
-    line-height: @conent-height;
-    height: @conent-height;
-    &:hover {
-      background: @bg-hover;
-      cursor: pointer;
+  .tree-node {
+    .tree-group {
+      transition: height 0.3s ease;
+      overflow: hidden;
     }
-    .tree-node-title {
-      padding-left: 3px;
-    }
-    &.active .tree-node-title {
-      font-style: italic;
-      font-weight: bold;
-    }
-    &.active {
-      background: @bg-active;
-    }
-    .tree-node-icon.icon-angle {
-      display: inline-block;
-      cursor: pointer;
-      width: 0;
-      height: 0;
-      margin-left: 6px;
-      margin-right: 3px;
-      border: 5px solid transparent;
-      border-right-width: 0;
-      border-left-color: #000;
-      border-left-width: 7px;
-      transform: rotate(0);
-      transition: transform 0.3s ease;
-    }
-    .tree-node-icon.icon-angle.down {
-      transform: rotate(90deg);
+    .tree-node-content {
+      line-height: @conent-height;
+      height: @conent-height;
+      &:hover {
+        background: @bg-hover;
+        cursor: pointer;
+      }
+      .tree-node-title {
+        padding-left: 3px;
+      }
+      &.active .tree-node-title {
+        font-style: italic;
+        font-weight: bold;
+      }
+      &.active {
+        background: @bg-active;
+      }
+      .tree-node-icon.icon-angle {
+        display: inline-block;
+        cursor: pointer;
+        width: 0;
+        height: 0;
+        margin-left: 6px;
+        margin-right: 3px;
+        border: 5px solid transparent;
+        border-right-width: 0;
+        border-left-color: #000;
+        border-left-width: 7px;
+        transform: rotate(0);
+        transition: transform 0.3s ease;
+      }
+      .tree-node-icon.icon-angle.down {
+        transform: rotate(90deg);
+      }
     }
   }
+
 }

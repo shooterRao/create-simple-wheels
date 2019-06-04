@@ -1,6 +1,5 @@
 import './index.less';
 import { assign, createNode, hasChild } from '../../utils/index';
-import animate from '../simpleAnimate/index';
 
 const preClsName = 'simple-tree';
 
@@ -26,14 +25,12 @@ export default class simpleTree {
     this.opts = assign({}, defaultOpts, options);
     this.domRefs = {};
     this.activeItem = null; // 保存activeItem
-    // this.activeTitle = null;
     this.domRefs.treeNodeContents = []; // 收集tree-node-content
     // 在最终渲染之前，先初始化节点、icon、绑定事件
     this.initDom()
       .initState()
       .bindEvent()
       .appendBaseNode();
-    return this;
   }
 
   /**
@@ -80,15 +77,12 @@ export default class simpleTree {
       // 设置padding
       treeNodeContent.style.paddingLeft = `${level * this.opts.paddingLeft}px`;
       // 把数据加到div节点上，方便点击时查到
-      treeNodeContent.nodeData = data[i];
+      treeNodeContent.$$nodeData = data[i];
       // 收集treeNodeContent引用
       this.domRefs.treeNodeContents.push(treeNodeContent);
       treeNode.appendChild(treeNodeContent);
       group.appendChild(treeNode);
       parentNode.appendChild(group);
-      // let groupLevel = level;
-      // if (data[i].folder === true && data[i].children.length >= 0) {
-      // console.log(this);
       if (hasChild(data[i])) {
         // groupLevel++;
         const treeGroup = createNode(this.opts.templates.treeGroup);
@@ -107,12 +101,12 @@ export default class simpleTree {
     const { treeNodeContents } = this.domRefs;
     const { createTreeNodeContent, frontIconClassName } = this.opts;
     for (let i = 0, len = treeNodeContents.length; i < len; i++) {
-      const { nodeData } = treeNodeContents[i];
+      const { $$nodeData } = treeNodeContents[i];
       // 处理icon
-      if (hasChild(nodeData)) {
+      if (hasChild($$nodeData)) {
         treeNodeContents[i].setAttribute('role', 'folder');
         treeNodeContents[i].firstChild.classList.add('icon-angle');
-        if (nodeData.expand === true) {
+        if ($$nodeData.expand === true) {
           treeNodeContents[i].firstChild.classList.add('down');
           treeNodeContents[i].setAttribute('expand', true);
         } else {
@@ -123,7 +117,7 @@ export default class simpleTree {
           treeNodeContents[i].firstChild.classList.add(v);
         });
       }
-      createTreeNodeContent && createTreeNodeContent(treeNodeContents[i], nodeData);
+      createTreeNodeContent && createTreeNodeContent(treeNodeContents[i], $$nodeData);
     }
     return this;
   }
@@ -152,11 +146,12 @@ export default class simpleTree {
       const tagName = target.tagName.toLowerCase();
       // 需要判断的核心是treeNodeContent这个div节点
       const treeNodeCon = tagName === 'div' ? target : target.parentNode;
-      if (treeNodeCon.hasAttribute('expand')) {
+      // 判断是否为展开节点
+      if (treeNodeCon.hasAttribute('role')) {
         simpleTree.toggleExpand(treeNodeCon);
       } else if (this.opts.click) {
         this.toggleActive(treeNodeCon);
-        this.opts.click(e, treeNodeCon.nodeData);
+        this.opts.click(e, treeNodeCon.$$nodeData);
       }
     };
 
@@ -170,13 +165,14 @@ export default class simpleTree {
         // callback
         if (this.opts.dblclick) {
           this.toggleActive(treeNodeCon);
-          this.opts.dblclick(e, treeNodeCon.nodeData);
+          this.opts.dblclick(e, treeNodeCon.$$nodeData);
         }
       }
     };
 
     this.domRefs.treeWrapper.addEventListener('click', this.clickHandle, false);
-    this.domRefs.treeWrapper.addEventListener('dblclick', this.dblclickHandle, false);
+    this.opts.dblclick && this.domRefs.treeWrapper.addEventListener('dblclick', this.dblclickHandle, false);
+
     return this;
   }
 
@@ -238,13 +234,12 @@ export default class simpleTree {
   static toggleExpand(treeNodeCon) {
     if (treeNodeCon.getAttribute('expand') === 'true') {
       treeNodeCon.firstChild.classList.remove('down');
-      treeNodeCon.setAttribute('expand', 'false');
+      treeNodeCon.setAttribute('expand', false);
     } else {
       treeNodeCon.firstChild.classList.add('down');
-      treeNodeCon.setAttribute('expand', 'true');
+      treeNodeCon.setAttribute('expand', true);
     }
-    // slide动画
-    simpleTree.slideAnimate(treeNodeCon);
+    this.slideAnimate(treeNodeCon);
   }
 
   /**
@@ -254,44 +249,43 @@ export default class simpleTree {
    */
   static slideAnimate(treeNodeCon) {
     const group = treeNodeCon.nextElementSibling;
-    if (treeNodeCon.getAttribute('expand') === 'false') {
-      // slideUp
-      const { offsetHeight } = group;
-      group.style.overflow = 'hidden';
-      const opts = {
-        to: 0,
-        from: offsetHeight,
-        during: 200,
-        type: 'linear',
-        callback(value) {
-          group.style.height = `${value}px`;
-        }
-      };
-      animate.play(opts).then(() => {
-        group.style.height = '';
-        group.style.display = 'none';
-        group.style.overflow = '';
-      });
-    } else {
-      // slideDown
-      group.style.display = 'block';
-      group.style.overflow = 'hidden';
-      const { offsetHeight } = group;
-      const opts = {
-        to: offsetHeight,
-        from: 0,
-        during: 200,
-        type: 'linear',
-        callback(value) {
-          group.style.height = `${value}px`;
-        }
-      };
-      animate.play(opts).then(() => {
-        group.style.height = '';
-        group.style.overflow = '';
-      });
+
+    if (!group.$$transitionendHandle) {
+      group.$$transitionendHandle = this.transitionendHandle.bind(this, group);
+      group.addEventListener('transitionend', group.$$transitionendHandle, false);
     }
+
+    const expand = treeNodeCon.getAttribute('expand') === 'true';
+
+    if (!expand) {
+      const { offsetHeight } = group;
+      group.style.height = `${offsetHeight}px`;
+      setTimeout(() => {
+        group.style.height = '0';
+      }, 0);
+    } else {
+      group.style.display = '';
+      group.style.height = '';
+      const { offsetHeight } = group;
+      group.style.height = '0';
+      setTimeout(() => {
+        group.style.height = `${offsetHeight}px`;
+      }, 0);
+    }
+  }
+
+  static transitionendHandle(el) {
+    const isShow = el.style.height !== '0px';
+    if (isShow) {
+      el.style.height = '';
+    } else {
+      el.style.display = 'none';
+    }
+    // 执行完解绑
+    el.removeEventListener('transitionend', el.$$transitionendHandle);
+    el.$$transitionendHandle = null;
+    delete el.$$transitionendHandle;
   }
 }
 
-simpleTree.version = '1.1.0';
+simpleTree.version = '2.0.0';
