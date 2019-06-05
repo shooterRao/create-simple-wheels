@@ -5,8 +5,8 @@ import postcss from 'rollup-plugin-postcss'
 export default {
   input: `src/index.js`,
   output: {
-    file: 'dist/index.js',
-    format: 'umd',
+    // file: 'dist/index.js',
+    // format: 'umd',
     name: 'simplewheels'
     // sourcemap: true
   },
@@ -19,7 +19,7 @@ export default {
     }),
     babel({
       exclude: 'node_modules/**'
-    }),
-    uglify()
+    })
+    // uglify()
   ]
 };
