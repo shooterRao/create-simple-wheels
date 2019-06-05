@@ -2,6 +2,7 @@ import './index.less';
 import { assign, createNode, hasChild } from '../../utils/index';
 
 const preClsName = 'simple-tree';
+const TRANSITIONEND = window.ontransitionend === undefined ? 'webkitTransitionEnd' : 'transitionend';
 
 export default class simpleTree {
   constructor(options) {
@@ -59,10 +60,12 @@ export default class simpleTree {
   initTree(parentNode, group, data, level = 0) {
     let treeNode;
     let treeNodeContent; // li -> div
+
     // data为空情况下，加个空的ul进去
     if (data.length === 0) {
       parentNode.appendChild(group);
     }
+
     for (let i = 0, len = data.length; i < len; i++) {
       // 先创建li
       treeNode = createNode(this.opts.templates.treeNode);
@@ -269,7 +272,7 @@ export default class simpleTree {
 
     if (!group.$$transitionendHandle) {
       group.$$transitionendHandle = this.transitionendHandle.bind(this, group);
-      group.addEventListener('transitionend', group.$$transitionendHandle, false);
+      group.addEventListener(TRANSITIONEND, group.$$transitionendHandle, false);
     }
 
     const expand = treeNodeCon.getAttribute('expand') === 'true';
@@ -304,10 +307,10 @@ export default class simpleTree {
       el.style.display = 'none';
     }
     // 执行完解绑
-    el.removeEventListener('transitionend', el.$$transitionendHandle);
+    el.removeEventListener(TRANSITIONEND, el.$$transitionendHandle);
     el.$$transitionendHandle = null;
     delete el.$$transitionendHandle;
   }
 }
 
-simpleTree.version = '2.0.0';
+simpleTree.version = '2.0.1';
