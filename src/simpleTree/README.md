@@ -29,7 +29,7 @@ var tree = new simpleTree({
   dblclick: function(event, data) {
 
   },
-  createTreeNodeContent: function(node, nodeData) {
+  createNodeContent: function(node, nodeData) {
     // node => dom节点
     // nodeData => 构造节点传入的数据
   }
