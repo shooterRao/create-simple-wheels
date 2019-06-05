@@ -26,8 +26,10 @@
     #tree {
       width: 300px;
       height: auto;
-      border: 1px solid rgb(97, 97, 97);
+      border: 1px solid rgb(180, 178, 178);
       margin: 20px auto;
+      font-size: 14px;
+      font-family: "Avenir", Helvetica, Arial, sans-serif;
     }
   </style>
 </head>
@@ -96,17 +98,47 @@
           title: '热门业务', id: '16'
         }
       ]
+    },
+    {
+      title: '统计类型', id: '9', expand: true,
+      children: [
+        {
+          title: '活跃分析', id: '10', expand: true,
+          children: [
+            {
+              title: '时段分析', id: '11', expand: false,
+              children: [
+                {
+                  title: '新增和启动', id: '12'
+                },
+                {
+                  title: '用户留存', id: '13'
+                },
+              ]
+            }
+          ]
+        },
+        {
+          title: '热门评价', id: '15'
+        },
+        {
+          title: '热门业务', id: '16',
+          createNodeContent(node, nodeData) {
+            return node.innerHTML = `<span class="tree-node-title">${nodeData.title}</span>`
+          }
+        }
+      ]
     }
     ];
     console.time('test');
     var tree = new simpleTree({
       baseNode: document.getElementById('tree'),
       treeData: treeData,
-      frontIconClassName: 'iconfont icon-wd',
+      // frontIconClassName: 'iconfont icon-wd',
       click: function (event, data) {
         console.log(data);
       },
-      createTreeNodeContent: function(node, nodeData) {
+      createContent: function(node, nodeData) {
         // console.log(node);
         // console.log(nodeData);
       }

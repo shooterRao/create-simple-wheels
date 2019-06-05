@@ -50,7 +50,7 @@ export default class simpleTree {
 
   /**
    * @method initTree()
-   * 遍历data,递归生成 ul -> li -> ul
+   * @description 遍历data,递归生成 ul -> li -> ul
    * @param {Node} group treeGroup(UL)
    * @param {array} data 数据源
    * @param {number} level 层级控制
@@ -59,7 +59,7 @@ export default class simpleTree {
   initTree(parentNode, group, data, level = 0) {
     let treeNode;
     let treeNodeContent; // li -> div
-    // data为空情况下，加个空的ul进去，防止133行报错
+    // data为空情况下，加个空的ul进去
     if (data.length === 0) {
       parentNode.appendChild(group);
     }
@@ -67,24 +67,49 @@ export default class simpleTree {
       // 先创建li
       treeNode = createNode(this.opts.templates.treeNode);
       treeNodeContent = createNode(this.opts.templates.treeNodeContent);
-      if (this.opts.frontIconClassName) {
-        treeNodeContent.innerHTML = `<span class="tree-node-icon"></span><span class="tree-node-title">${
+
+      // 处理节点内容
+      // 非叶子节点
+      if (hasChild(data[i])) {
+        // 是否展开
+        const { expand } = data[i];
+        // 增加标识
+        treeNodeContent.setAttribute('role', 'folder');
+        treeNodeContent.innerHTML = `<span class="tree-node-icon icon-angle ${expand
+          && 'down'}"></span><span class="tree-node-title">${data[i].title}</span>`;
+
+        if (expand) {
+          treeNodeContent.setAttribute('expand', true);
+        } else {
+          treeNodeContent.setAttribute('expand', false);
+        }
+
+        // 处理叶子节点
+      } else if (this.opts.frontIconClassName) {
+        const clas = this.opts.frontIconClassName;
+        treeNodeContent.innerHTML = `<span class="tree-node-icon ${clas}"></span><span class="tree-node-title">${
           data[i].title
         }</span>`;
       } else {
         treeNodeContent.innerHTML = `<span class="tree-node-title">${data[i].title}</span>`;
       }
+
       // 设置padding
       treeNodeContent.style.paddingLeft = `${level * this.opts.paddingLeft}px`;
+
       // 把数据加到div节点上，方便点击时查到
       treeNodeContent.$$nodeData = data[i];
+
       // 收集treeNodeContent引用
       this.domRefs.treeNodeContents.push(treeNodeContent);
+
+      // 装载节点
       treeNode.appendChild(treeNodeContent);
       group.appendChild(treeNode);
       parentNode.appendChild(group);
+
+      // 递归
       if (hasChild(data[i])) {
-        // groupLevel++;
         const treeGroup = createNode(this.opts.templates.treeGroup);
         this.initTree(treeNode, treeGroup, data[i].children, level + 1);
       }
@@ -99,26 +124,18 @@ export default class simpleTree {
    */
   initState() {
     const { treeNodeContents } = this.domRefs;
-    const { createTreeNodeContent, frontIconClassName } = this.opts;
-    for (let i = 0, len = treeNodeContents.length; i < len; i++) {
-      const { $$nodeData } = treeNodeContents[i];
-      // 处理icon
-      if (hasChild($$nodeData)) {
-        treeNodeContents[i].setAttribute('role', 'folder');
-        treeNodeContents[i].firstChild.classList.add('icon-angle');
-        if ($$nodeData.expand === true) {
-          treeNodeContents[i].firstChild.classList.add('down');
-          treeNodeContents[i].setAttribute('expand', true);
-        } else {
-          treeNodeContents[i].nextElementSibling.style.display = 'none';
-        }
-      } else {
-        frontIconClassName.split(' ').forEach(v => {
-          treeNodeContents[i].firstChild.classList.add(v);
-        });
+    const { createNodeContent } = this.opts;
+    treeNodeContents.forEach(node => {
+      const { $$nodeData } = node;
+      if (hasChild($$nodeData) && !$$nodeData.expand) {
+        node.nextElementSibling.style.display = 'none';
       }
-      createTreeNodeContent && createTreeNodeContent(treeNodeContents[i], $$nodeData);
-    }
+      if ($$nodeData.createNodeContent && typeof $$nodeData.createNodeContent === 'function') {
+        $$nodeData.createNodeContent(node, $$nodeData);
+      } else {
+        createNodeContent && createNodeContent(node, $$nodeData);
+      }
+    });
     return this;
   }
 
