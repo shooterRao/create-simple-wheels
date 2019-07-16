@@ -1,5 +1,7 @@
 import './index.less';
-import { assign, createNode, hasChild } from '../../utils/index';
+import {
+  assign, createNode, hasChild, nextFrame
+} from '../../utils/index';
 
 const preClsName = 'simple-tree';
 const TRANSITIONEND = window.ontransitionend === undefined ? 'webkitTransitionEnd' : 'transitionend';
@@ -278,19 +280,20 @@ export default class simpleTree {
     const expand = treeNodeCon.getAttribute('expand') === 'true';
 
     if (!expand) {
-      const { offsetHeight } = group;
-      group.style.height = `${offsetHeight}px`;
-      setTimeout(() => {
-        group.style.height = '0';
-      }, 0);
+      group.style.height = '';
+      const height = group.offsetHeight;
+      nextFrame(() => {
+        group.style.height = `${height}px`;
+        nextFrame(() => group.style.height = 0);
+      });
     } else {
       group.style.display = '';
       group.style.height = '';
-      const { offsetHeight } = group;
-      group.style.height = '0';
-      setTimeout(() => {
-        group.style.height = `${offsetHeight}px`;
-      }, 0);
+      const height = group.offsetHeight;
+      nextFrame(() => {
+        group.style.height = 0;
+        nextFrame(() => group.style.height = `${height}px`);
+      });
     }
   }
 
@@ -304,7 +307,9 @@ export default class simpleTree {
     if (isShow) {
       el.style.height = '';
     } else {
-      el.style.display = 'none';
+      // 如果有2个transition同时进行，最后一个的过渡效果会被影响
+      // 因为一旦设了none，transition过渡会立马取消，有一种闪烁感
+      // el.style.display = 'none';
     }
     // 执行完解绑
     el.removeEventListener(TRANSITIONEND, el.$$transitionendHandle);
@@ -313,4 +318,4 @@ export default class simpleTree {
   }
 }
 
-simpleTree.version = '2.0.1';
+simpleTree.version = '2.0.2';

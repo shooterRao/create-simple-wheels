@@ -212,6 +212,15 @@ const hasChild = nodeData => {
   return nodeData.children && nodeData.children.length !== 0;
 };
 
+// 下一帧执行
+const nextFrame = fn => {
+  if (window.requestAnimationFrame) {
+    window.requestAnimationFrame(fn)
+  } else {
+    window.setTimeout(fn, 16)
+  }
+}
+
 export {
   assign,
   deepCopy,
@@ -222,5 +231,6 @@ export {
   queryAll,
   isDOM,
   typeOf,
-  hasChild
+  hasChild,
+  nextFrame
 };
