@@ -1,5 +1,7 @@
 # simplewheels
 
+[![TypeScript](https://badges.frapsoft.com/typescript/version/typescript-next.svg?v=101)](https://github.com/ellerbrock/typescript-badges/)
+
 ## Q&A
 
 Q: How to use?
