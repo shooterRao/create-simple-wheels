@@ -45,7 +45,7 @@ A: 4个
 
 Q: 技术栈和编译工具？
 
-A: 原生`ES6+`，`less`，配合`rollup`打包工具，编译成`UMD`规范
+A: ~~原生`ES6+`~~ `typeScript`，`less`，配合`rollup`打包工具，编译成`UMD`规范
 
 Q: 如何运行？
 
@@ -53,6 +53,8 @@ A: `git clone git@github.com:shooterRao/create-simple-wheels.git`
 
 `npm i`
 
-开发`npm run dev`
+开发`yarn dev`
 
-生产`npm run build`
+生产`yarn build`
+
+打包全部文件 `yarn buildAll`

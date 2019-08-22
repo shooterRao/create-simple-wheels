@@ -12,3 +12,5 @@ package-lock.json
 *.ntvs*
 *.njsproj
 *.sln
+
+.rpt2_cache

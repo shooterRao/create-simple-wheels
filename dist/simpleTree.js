@@ -1,2 +1,386 @@
-!function(e,t){"object"==typeof exports&&"undefined"!=typeof module?module.exports=t():"function"==typeof define&&define.amd?define(t):e.simpleTree=t()}(this,function(){"use strict";!function(e,t){void 0===t&&(t={});var n=t.insertAt;if(e&&"undefined"!=typeof document){var r=document.head||document.getElementsByTagName("head")[0],i=document.createElement("style");i.type="text/css","top"===n&&r.firstChild?r.insertBefore(i,r.firstChild):r.appendChild(i),i.styleSheet?i.styleSheet.cssText=e:i.appendChild(document.createTextNode(e))}}(".simple-tree.tree-wrapper {\n  width: 100%;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.simple-tree.tree-wrapper ul {\n  list-style: none;\n}\n.simple-tree.tree-wrapper .tree-base-node:hover {\n  cursor: pointer;\n}\n.simple-tree.tree-wrapper .tree-base-node .tree-group {\n  transition: height 0.3s ease;\n  overflow: hidden;\n}\n.simple-tree.tree-wrapper .tree-base-node .tree-node-content {\n  transition: color 0.3s, background 0.3s;\n  line-height: 36px;\n  height: 36px;\n}\n.simple-tree.tree-wrapper .tree-base-node .tree-node-content:hover {\n  background: #ecf5ff;\n}\n.simple-tree.tree-wrapper .tree-base-node .tree-node-content .tree-node-title {\n  padding-left: 3px;\n}\n.simple-tree.tree-wrapper .tree-base-node .tree-node-content.active {\n  color: #2d8cf0;\n}\n.simple-tree.tree-wrapper .tree-base-node .tree-node-content.active {\n  background: #ecf5ff;\n}\n.simple-tree.tree-wrapper .tree-base-node .tree-node-content .tree-node-icon.icon-angle {\n  display: inline-block;\n  cursor: pointer;\n  width: 0;\n  height: 0;\n  margin-left: 6px;\n  margin-right: 3px;\n  border: 5px solid transparent;\n  border-right-width: 0;\n  border-left-width: 6px;\n  border-left-color: #000;\n  -webkit-transform: rotate(0);\n          transform: rotate(0);\n  transition: -webkit-transform 0.3s ease;\n  transition: transform 0.3s ease;\n  transition: transform 0.3s ease, -webkit-transform 0.3s ease;\n}\n.simple-tree.tree-wrapper .tree-base-node .tree-node-content .tree-node-icon.icon-angle.down {\n  -webkit-transform: rotate(90deg);\n          transform: rotate(90deg);\n}\n");var e=function(){function r(e,t){for(var n=0;n<t.length;n++){var r=t[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(e,r.key,r)}}return function(e,t,n){return t&&r(e.prototype,t),n&&r(e,n),e}}(),n=Object.assign?Object.assign:function(e){for(var t=1;t<arguments.length;t++){var n=arguments[t];for(var r in n)Object.prototype.hasOwnProperty.call(n,r)&&(e[r]=n[r])}return e},p=function(e){var t=document.createElement("div");return t.innerHTML=e,t.childNodes[0]},h=function(e){return e.children&&0!==e.children.length},i=function(e){window.requestAnimationFrame?window.requestAnimationFrame(e):window.setTimeout(e,16)},o=void 0===window.ontransitionend?"webkitTransitionEnd":"transitionend",t=function(){function s(e){!function(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}(this,s);var t={baseNode:null,paddingLeft:16,animateSpeed:"normal",treeData:[],frontIconClassName:null,dblclick:null,click:null,createTreeNodeContent:null,templates:{treeWrapper:'<div class="simple-tree tree-wrapper"></div>',treeBaseNode:'<ul class="tree-base-node"></ul>',treeNode:'<li class="tree-node"></li>',treeGroup:'<ul class="tree-group"></ul>',treeNodeContent:'<div class="tree-node-content"></div>'}};this.opts=n({},t,e),this.domRefs={},this.activeItem=null,this.domRefs.treeNodeContents=[],this.initDom().initState().bindEvent().appendBaseNode()}return e(s,[{key:"initDom",value:function(){if(!(this.opts.treeData instanceof Array))throw new TypeError("treeData must be an Array!");return this.domRefs.treeWrapper=p(this.opts.templates.treeWrapper),this.domRefs.treeBaseNode=p(this.opts.templates.treeBaseNode),this.initTree(this.domRefs.treeWrapper,this.domRefs.treeBaseNode,this.opts.treeData),this}},{key:"initTree",value:function(e,t,n){var r=3<arguments.length&&void 0!==arguments[3]?arguments[3]:0,i=void 0,s=void 0;0===n.length&&e.appendChild(t);for(var o=0,a=n.length;o<a;o++){if(i=p(this.opts.templates.treeNode),s=p(this.opts.templates.treeNodeContent),h(n[o])){var d=n[o].expand;s.setAttribute("role","folder"),s.innerHTML='<span class="tree-node-icon icon-angle '+(d&&"down")+'"></span><span class="tree-node-title">'+n[o].title+"</span>",d?s.setAttribute("expand",!0):s.setAttribute("expand",!1)}else if(this.opts.frontIconClassName){var l=this.opts.frontIconClassName;s.innerHTML='<span class="tree-node-icon '+l+'"></span><span class="tree-node-title">'+n[o].title+"</span>"}else s.innerHTML='<span class="tree-node-title">'+n[o].title+"</span>";if(s.style.paddingLeft=r*this.opts.paddingLeft+"px",s.$$nodeData=n[o],this.domRefs.treeNodeContents.push(s),i.appendChild(s),t.appendChild(i),e.appendChild(t),h(n[o])){var c=p(this.opts.templates.treeGroup);this.initTree(i,c,n[o].children,r+1)}}}},{key:"initState",value:function(){var e=this.domRefs.treeNodeContents,n=this.opts.createNodeContent;return e.forEach(function(e){var t=e.$$nodeData;h(t)&&!t.expand&&(e.nextElementSibling.style.display="none"),t.createNodeContent&&"function"==typeof t.createNodeContent?t.createNodeContent(e,t):n&&n(e,t)}),this}},{key:"appendBaseNode",value:function(){this.opts.baseNode.appendChild(this.domRefs.treeWrapper)}},{key:"bindEvent",value:function(){var i=this;return this.clickHandle=function(e){var t=e||window.event,n=t.target||t.srcElement,r="div"===n.tagName.toLowerCase()?n:n.parentNode;r.hasAttribute("role")?s.toggleExpand(r):i.opts.click&&(i.toggleActive(r),i.opts.click(t,r.$$nodeData))},this.dblclickHandle=function(e){var t=e||window.event,n=t.target||t.srcElement,r="div"===n.tagName.toLowerCase()?n:n.parentNode;r.hasAttribute("role")||i.opts.dblclick&&(i.toggleActive(r),i.opts.dblclick(t,r.$$nodeData))},this.domRefs.treeWrapper.addEventListener("click",this.clickHandle,!1),this.opts.dblclick&&this.domRefs.treeWrapper.addEventListener("dblclick",this.dblclickHandle,!1),this}},{key:"toggleActive",value:function(e){this.activeItem&&this.activeItem.classList&&this.activeItem.classList.remove("active"),e.classList.add("active"),this.activeItem=e}},{key:"removeEvent",value:function(){this.domRefs.treeWrapper.removeEventListener("click",this.clickHandle,!1),this.domRefs.treeWrapper.removeEventListener("dblclick",this.dblclickHandle,!1),this.clickHandle=null,this.dblclickHandle=null}},{key:"getActiveItem",value:function(){return this.activeItem?this.activeItem:null}},{key:"destroyed",value:function(){for(var e=this.domRefs.treeNodeContents.length;e--;)this.domRefs.treeNodeContents[e]=null;this.removeEvent(),this.domRefs.treeWrapper=null,this.opts.baseNode.removeChild(this.opts.baseNode.children[0])}}],[{key:"toggleExpand",value:function(e){"true"===e.getAttribute("expand")?(e.firstChild.classList.remove("down"),e.setAttribute("expand",!1)):(e.firstChild.classList.add("down"),e.setAttribute("expand",!0)),this.slideAnimate(e)}},{key:"slideAnimate",value:function(e){var t=e.nextElementSibling;if(t.$$transitionendHandle||(t.$$transitionendHandle=this.transitionendHandle.bind(this,t),t.addEventListener(o,t.$$transitionendHandle,!1)),"true"===e.getAttribute("expand")){t.style.display="",t.style.height="";var n=t.offsetHeight;i(function(){t.style.height=0,i(function(){return t.style.height=n+"px"})})}else{t.style.height="";var r=t.offsetHeight;i(function(){t.style.height=r+"px",i(function(){return t.style.height=0})})}}},{key:"transitionendHandle",value:function(e){"0px"!==e.style.height&&(e.style.height=""),e.removeEventListener(o,e.$$transitionendHandle),e.$$transitionendHandle=null,delete e.$$transitionendHandle}}]),s}();return t.version="2.0.2",t});
+(function (global, factory) {
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+  typeof define === 'function' && define.amd ? define(factory) :
+  (global = global || self, global.simpleTree = factory());
+}(this, function () { 'use strict';
+
+  function styleInject(css, ref) {
+    if ( ref === void 0 ) ref = {};
+    var insertAt = ref.insertAt;
+
+    if (!css || typeof document === 'undefined') { return; }
+
+    var head = document.head || document.getElementsByTagName('head')[0];
+    var style = document.createElement('style');
+    style.type = 'text/css';
+
+    if (insertAt === 'top') {
+      if (head.firstChild) {
+        head.insertBefore(style, head.firstChild);
+      } else {
+        head.appendChild(style);
+      }
+    } else {
+      head.appendChild(style);
+    }
+
+    if (style.styleSheet) {
+      style.styleSheet.cssText = css;
+    } else {
+      style.appendChild(document.createTextNode(css));
+    }
+  }
+
+  var css = ".simple-tree.tree-wrapper {\n  width: 100%;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.simple-tree.tree-wrapper ul {\n  list-style: none;\n}\n.simple-tree.tree-wrapper .tree-base-node:hover {\n  cursor: pointer;\n}\n.simple-tree.tree-wrapper .tree-base-node .tree-group {\n  transition: height 0.3s ease;\n  overflow: hidden;\n}\n.simple-tree.tree-wrapper .tree-base-node .tree-node-content {\n  transition: color 0.3s, background 0.3s;\n  line-height: 36px;\n  height: 36px;\n}\n.simple-tree.tree-wrapper .tree-base-node .tree-node-content:hover {\n  background: #ecf5ff;\n}\n.simple-tree.tree-wrapper .tree-base-node .tree-node-content .tree-node-title {\n  padding-left: 3px;\n}\n.simple-tree.tree-wrapper .tree-base-node .tree-node-content.active {\n  color: #2d8cf0;\n}\n.simple-tree.tree-wrapper .tree-base-node .tree-node-content.active {\n  background: #ecf5ff;\n}\n.simple-tree.tree-wrapper .tree-base-node .tree-node-content .tree-node-icon.icon-angle {\n  display: inline-block;\n  cursor: pointer;\n  width: 0;\n  height: 0;\n  margin-left: 6px;\n  margin-right: 3px;\n  border: 5px solid transparent;\n  border-right-width: 0;\n  border-left-width: 6px;\n  border-left-color: #000;\n  transform: rotate(0);\n  transition: transform 0.3s ease;\n}\n.simple-tree.tree-wrapper .tree-base-node .tree-node-content .tree-node-icon.icon-angle.down {\n  transform: rotate(90deg);\n}\n";
+  styleInject(css);
+
+  /**
+   * 对象浅拷贝
+   * @param {Object} target
+   * @returns {Object}
+   */
+  var assign = Object.assign
+      ? Object.assign
+      : function (target) {
+          for (var i = 1; i < arguments.length; i++) {
+              var source = arguments[i];
+              for (var key in source) {
+                  if (Object.prototype.hasOwnProperty.call(source, key)) {
+                      target[key] = source[key];
+                  }
+              }
+          }
+          return target;
+      };
+  /**
+   * createNode
+   * @param {String} htmlStr
+   * @returns {DomNode}
+   */
+  var createNode = function (htmlStr) {
+      var div = document.createElement('div');
+      div.innerHTML = htmlStr;
+      return div.childNodes[0];
+  };
+  var hasChild = function (nodeData) {
+      if (!nodeData.children) {
+          return false;
+      }
+      return nodeData.children.length !== 0;
+  };
+  // 下一帧执行
+  var nextFrame = function (fn) {
+      if (window.requestAnimationFrame) {
+          window.requestAnimationFrame(fn);
+      }
+      else {
+          window.setTimeout(fn, 16);
+      }
+  };
+  //# sourceMappingURL=index.js.map
+
+  var preClsName = 'simple-tree';
+  var TRANSITIONEND = window.ontransitionend === undefined ? 'webkitTransitionEnd' : 'transitionend';
+  var SimpleTree = /** @class */ (function () {
+      function SimpleTree(options) {
+          var defaultOpts = {
+              baseNode: null,
+              paddingLeft: 16,
+              treeData: [],
+              frontIconClassName: null,
+              dblclick: null,
+              click: null,
+              createTreeNodeContent: null,
+              templates: {
+                  treeWrapper: "<div class=\"" + preClsName + " tree-wrapper\"></div>",
+                  treeBaseNode: '<ul class="tree-base-node"></ul>',
+                  treeNode: '<li class="tree-node"></li>',
+                  treeGroup: '<ul class="tree-group"></ul>',
+                  treeNodeContent: '<div class="tree-node-content"></div>'
+              }
+          };
+          this.opts = assign({}, defaultOpts, options);
+          this.domRefs = {};
+          this.activeItem = null; // 保存activeItem
+          this.domRefs.treeNodeContents = []; // 收集tree-node-content
+          this.clickHandle = null;
+          this.dblclickHandle = null;
+          // 在最终渲染之前，先初始化节点、icon、绑定事件
+          this.initDom()
+              .initState()
+              .bindEvent()
+              .appendBaseNode();
+      }
+      /**
+       * @method initDom()
+       * @param null
+       * @return this
+       */
+      SimpleTree.prototype.initDom = function () {
+          if (!(this.opts.treeData instanceof Array)) {
+              throw new TypeError('treeData must be an Array!');
+          }
+          this.domRefs.treeWrapper = createNode(this.opts.templates.treeWrapper);
+          this.domRefs.treeBaseNode = createNode(this.opts.templates.treeBaseNode);
+          this.initTree(this.domRefs.treeWrapper, this.domRefs.treeBaseNode, this.opts.treeData);
+          return this;
+      };
+      /**
+       * @method initTree()
+       * @description 遍历data,递归生成 ul -> li -> ul
+       * @param {Node} group treeGroup(UL)
+       * @param {array} data 数据源
+       * @param {number} level 层级控制
+       * @return null
+       */
+      SimpleTree.prototype.initTree = function (parentNode, group, data, level) {
+          if (level === void 0) { level = 0; }
+          var treeNode;
+          var treeNodeContent; // li -> div
+          if (!data)
+              return;
+          // data为空情况下，加个空的ul进去
+          if (data.length === 0) {
+              parentNode.appendChild(group);
+          }
+          for (var i = 0, len = data.length; i < len; i++) {
+              // 先创建li
+              treeNode = createNode(this.opts.templates.treeNode);
+              treeNodeContent = createNode(this.opts.templates.treeNodeContent);
+              // 处理节点内容
+              // 非叶子节点
+              if (hasChild(data[i])) {
+                  // 是否展开
+                  var expand = data[i].expand;
+                  // 增加标识
+                  treeNodeContent.setAttribute('role', 'folder');
+                  treeNodeContent.innerHTML = "<span class=\"tree-node-icon icon-angle " + (expand &&
+                      'down') + "\"></span><span class=\"tree-node-title\">" + data[i].title + "</span>";
+                  if (expand) {
+                      treeNodeContent.setAttribute('expand', 'true');
+                  }
+                  else {
+                      treeNodeContent.setAttribute('expand', 'false');
+                  }
+                  // 处理叶子节点
+              }
+              else if (this.opts.frontIconClassName) {
+                  var clas = this.opts.frontIconClassName;
+                  treeNodeContent.innerHTML = "<span class=\"tree-node-icon " + clas + "\"></span><span class=\"tree-node-title\">" + data[i].title + "</span>";
+              }
+              else {
+                  treeNodeContent.innerHTML = "<span class=\"tree-node-title\">" + data[i].title + "</span>";
+              }
+              // 设置padding
+              treeNodeContent.style.paddingLeft = level * this.opts.paddingLeft + "px";
+              // 把数据加到div节点上，方便点击时查到
+              treeNodeContent.$$nodeData = data[i];
+              // 收集treeNodeContent引用
+              this.domRefs.treeNodeContents.push(treeNodeContent);
+              // 装载节点
+              treeNode.appendChild(treeNodeContent);
+              group.appendChild(treeNode);
+              parentNode.appendChild(group);
+              // 递归
+              if (hasChild(data[i])) {
+                  var treeGroup = createNode(this.opts.templates.treeGroup);
+                  this.initTree(treeNode, treeGroup, data[i].children, level + 1);
+              }
+          }
+      };
+      /**
+       * @method initState()
+       * 初始化状态
+       * 处理icon展示和expand属性
+       * @return this
+       */
+      SimpleTree.prototype.initState = function () {
+          var treeNodeContents = this.domRefs.treeNodeContents;
+          var createNodeContent = this.opts.createNodeContent;
+          treeNodeContents.forEach(function (node) {
+              var $$nodeData = node.$$nodeData;
+              if (hasChild($$nodeData) && !$$nodeData.expand) {
+                  var nextEle = node.nextElementSibling;
+                  nextEle.style.display = 'none';
+              }
+              if ($$nodeData.createNodeContent && typeof $$nodeData.createNodeContent === 'function') {
+                  $$nodeData.createNodeContent(node, $$nodeData);
+              }
+              else {
+                  createNodeContent && createNodeContent(node, $$nodeData);
+              }
+          });
+          return this;
+      };
+      /**
+       * @method appendBaseNode()
+       * 渲染到base节点上
+       * @return null
+       */
+      SimpleTree.prototype.appendBaseNode = function () {
+          this.opts.baseNode.appendChild(this.domRefs.treeWrapper);
+      };
+      /**
+       * @method bindEvent()
+       * 绑定事件(点击和双击事件)
+       * 使用事件委托
+       * 包含slide动画效果
+       * @return this
+       */
+      SimpleTree.prototype.bindEvent = function () {
+          var _this = this;
+          // 点击事件
+          this.clickHandle = function (evt) {
+              var e = evt || window.event;
+              var target = (e.target || e.srcElement);
+              var tagName = target.tagName.toLowerCase();
+              // 需要判断的核心是treeNodeContent这个div节点
+              var treeNodeCon = (tagName === 'div' ? target : target.parentNode);
+              // 判断是否为展开节点
+              if (treeNodeCon.hasAttribute('role')) {
+                  SimpleTree.toggleExpand(treeNodeCon);
+              }
+              else if (_this.opts.click) {
+                  _this.toggleActive(treeNodeCon);
+                  _this.opts.click(e, treeNodeCon.$$nodeData);
+              }
+          };
+          // 双击事件
+          this.dblclickHandle = function (evt) {
+              var e = evt || window.event;
+              var target = (e.target || e.srcElement);
+              var tagName = target.tagName.toLowerCase();
+              var treeNodeCon = (tagName === 'div' ? target : target.parentNode);
+              if (!treeNodeCon.hasAttribute('role')) {
+                  // callback
+                  if (_this.opts.dblclick) {
+                      _this.toggleActive(treeNodeCon);
+                      _this.opts.dblclick(e, treeNodeCon.$$nodeData);
+                  }
+              }
+          };
+          this.domRefs.treeWrapper.addEventListener('click', this.clickHandle, false);
+          this.opts.dblclick &&
+              this.domRefs.treeWrapper.addEventListener('dblclick', this.dblclickHandle, false);
+          return this;
+      };
+      /**
+       * @method toggleActive()
+       * @param  Node treeNodeCon
+       * 切换高亮
+       */
+      SimpleTree.prototype.toggleActive = function (treeNodeCon) {
+          this.activeItem && this.activeItem.classList && this.activeItem.classList.remove('active');
+          treeNodeCon.classList.add('active');
+          this.activeItem = treeNodeCon;
+      };
+      /**
+       * @method removeEvent()
+       * 清除绑定事件
+       * @return null
+       */
+      SimpleTree.prototype.removeEvent = function () {
+          this.domRefs.treeWrapper.removeEventListener('click', this.clickHandle, false);
+          this.domRefs.treeWrapper.removeEventListener('dblclick', this.dblclickHandle, false);
+          this.clickHandle = null;
+          this.dblclickHandle = null;
+      };
+      /**
+       * @method getActiveItem()
+       * 获取高亮的节点
+       * @return Node
+       */
+      SimpleTree.prototype.getActiveItem = function () {
+          if (this.activeItem) {
+              return this.activeItem;
+          }
+          return null;
+      };
+      /**
+       * @method destroyed()
+       * 销毁Tree节点
+       * @return null
+       */
+      SimpleTree.prototype.destroyed = function () {
+          var i = this.domRefs.treeNodeContents.length;
+          while (i--) {
+              this.domRefs.treeNodeContents[i] = null;
+          }
+          this.removeEvent();
+          this.domRefs.treeWrapper = null;
+          this.opts.baseNode.removeChild(this.opts.baseNode.children[0]);
+      };
+      /**
+       * @method toggleExpand()
+       * 折叠切换
+       * @return null
+       */
+      SimpleTree.toggleExpand = function (treeNodeCon) {
+          var firstChild = treeNodeCon.firstChild;
+          if (treeNodeCon.getAttribute('expand') === 'true') {
+              firstChild.classList.remove('down');
+              treeNodeCon.setAttribute('expand', 'false');
+          }
+          else {
+              firstChild.classList.add('down');
+              treeNodeCon.setAttribute('expand', 'true');
+          }
+          this.slideAnimate(treeNodeCon);
+      };
+      /**
+       * @method slideAnimate()
+       * slide动画
+       * @return null
+       */
+      SimpleTree.slideAnimate = function (treeNodeCon) {
+          var group = treeNodeCon.nextElementSibling;
+          if (group !== null) {
+              if (!group.$$transitionendHandle) {
+                  group.$$transitionendHandle = this.transitionendHandle.bind(this, group);
+                  group.addEventListener(TRANSITIONEND, group.$$transitionendHandle, false);
+              }
+              var expand = treeNodeCon.getAttribute('expand') === 'true';
+              // 展开
+              if (!expand) {
+                  group.style.height = '';
+                  var height_1 = group.offsetHeight;
+                  nextFrame(function () {
+                      group.style.height = height_1 + "px";
+                      nextFrame(function () { return (group.style.height = '0'); });
+                  });
+              }
+              else {
+                  // 收缩
+                  group.style.display = '';
+                  group.style.height = '';
+                  var height_2 = group.offsetHeight;
+                  nextFrame(function () {
+                      group.style.height = '0';
+                      nextFrame(function () { return (group.style.height = height_2 + "px"); });
+                  });
+              }
+          }
+      };
+      /**
+       * @method transitionendHandle()
+       * 过渡事件
+       * @return null
+       */
+      SimpleTree.transitionendHandle = function (el) {
+          var isShow = el.style.height !== '0px';
+          if (isShow) {
+              el.style.height = '';
+          }
+          // 执行完解绑
+          el.removeEventListener(TRANSITIONEND, el.$$transitionendHandle);
+          el.$$transitionendHandle = null;
+          delete el.$$transitionendHandle;
+      };
+      return SimpleTree;
+  }());
+  SimpleTree.version = '3.0.0';
+
+  return SimpleTree;
+
+}));
 //# sourceMappingURL=simpleTree.js.map

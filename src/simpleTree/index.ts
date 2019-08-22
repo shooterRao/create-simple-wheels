@@ -1,17 +1,69 @@
 import './index.less';
-import {
-  assign, createNode, hasChild, nextFrame
-} from '../utils/index';
+import { assign, createNode, hasChild, nextFrame } from '../utils/index';
 
 const preClsName = 'simple-tree';
-const TRANSITIONEND = window.ontransitionend === undefined ? 'webkitTransitionEnd' : 'transitionend';
+const TRANSITIONEND =
+  window.ontransitionend === undefined ? 'webkitTransitionEnd' : 'transitionend';
 
-export default class simpleTree {
-  constructor(options) {
+// 渲染源数据
+interface TreeData {
+  title?: string;
+  expand?: boolean;
+  children?: [];
+  createNodeContent?: (node: ExtendNode, nodeData: TreeData) => void;
+}
+
+// 构造参数
+interface Options {
+  baseNode: HTMLElement;
+  treeData: TreeData[];
+  paddingLeft: number;
+  frontIconClassName?: string;
+  templates: OptTemplate;
+  dblclick?: (e: Event, data: TreeData) => {};
+  click?: (e: Event, data: TreeData) => {};
+  createNodeContent?: (node: ExtendNode, nodeData: TreeData) => void;
+}
+
+interface OptTemplate {
+  treeWrapper: string;
+  treeBaseNode: string;
+  treeNode: string;
+  treeGroup: string;
+  treeNodeContent: string;
+}
+
+// 收集相关节点ref
+// interface DomRefs<T> {
+//   treeNodeContents: T[];
+//   treeWrapper: T;
+//   treeBaseNode: T;
+// }
+
+interface SimpleTreeItf {
+  opts: Options;
+  activeItem: HTMLElement | null;
+  destroyed(): void;
+  getActiveItem(): HTMLElement | null;
+}
+
+interface ExtendNode extends HTMLElement {
+  $$nodeData: TreeData;
+  $$transitionendHandle?: any;
+}
+
+export default class SimpleTree implements SimpleTreeItf {
+  opts: Options;
+  activeItem: HTMLElement | null;
+  domRefs: any;
+  clickHandle: ((e: Event) => void) | null;
+  dblclickHandle: ((e: Event) => void) | null;
+  static version: string;
+
+  constructor(options: Options) {
     const defaultOpts = {
       baseNode: null,
       paddingLeft: 16,
-      animateSpeed: 'normal',
       treeData: [],
       frontIconClassName: null, // title前面的icon的className
       dblclick: null,
@@ -25,10 +77,15 @@ export default class simpleTree {
         treeNodeContent: '<div class="tree-node-content"></div>'
       }
     };
+
     this.opts = assign({}, defaultOpts, options);
     this.domRefs = {};
     this.activeItem = null; // 保存activeItem
     this.domRefs.treeNodeContents = []; // 收集tree-node-content
+
+    this.clickHandle = null;
+    this.dblclickHandle = null;
+
     // 在最终渲染之前，先初始化节点、icon、绑定事件
     this.initDom()
       .initState()
@@ -41,7 +98,7 @@ export default class simpleTree {
    * @param null
    * @return this
    */
-  initDom() {
+  initDom(): SimpleTree {
     if (!(this.opts.treeData instanceof Array)) {
       throw new TypeError('treeData must be an Array!');
     }
@@ -59,9 +116,11 @@ export default class simpleTree {
    * @param {number} level 层级控制
    * @return null
    */
-  initTree(parentNode, group, data, level = 0) {
+  initTree(parentNode: HTMLElement, group: HTMLElement, data?: TreeData[], level = 0) {
     let treeNode;
-    let treeNodeContent; // li -> div
+    let treeNodeContent: ExtendNode; // li -> div
+
+    if (!data) return;
 
     // data为空情况下，加个空的ul进去
     if (data.length === 0) {
@@ -80,13 +139,13 @@ export default class simpleTree {
         const { expand } = data[i];
         // 增加标识
         treeNodeContent.setAttribute('role', 'folder');
-        treeNodeContent.innerHTML = `<span class="tree-node-icon icon-angle ${expand
-          && 'down'}"></span><span class="tree-node-title">${data[i].title}</span>`;
+        treeNodeContent.innerHTML = `<span class="tree-node-icon icon-angle ${expand &&
+          'down'}"></span><span class="tree-node-title">${data[i].title}</span>`;
 
         if (expand) {
-          treeNodeContent.setAttribute('expand', true);
+          treeNodeContent.setAttribute('expand', 'true');
         } else {
-          treeNodeContent.setAttribute('expand', false);
+          treeNodeContent.setAttribute('expand', 'false');
         }
 
         // 处理叶子节点
@@ -130,10 +189,11 @@ export default class simpleTree {
   initState() {
     const { treeNodeContents } = this.domRefs;
     const { createNodeContent } = this.opts;
-    treeNodeContents.forEach(node => {
+    treeNodeContents.forEach((node: ExtendNode) => {
       const { $$nodeData } = node;
       if (hasChild($$nodeData) && !$$nodeData.expand) {
-        node.nextElementSibling.style.display = 'none';
+        const nextEle = node.nextElementSibling as HTMLElement;
+        nextEle.style.display = 'none';
       }
       if ($$nodeData.createNodeContent && typeof $$nodeData.createNodeContent === 'function') {
         $$nodeData.createNodeContent(node, $$nodeData);
@@ -162,15 +222,15 @@ export default class simpleTree {
    */
   bindEvent() {
     // 点击事件
-    this.clickHandle = evt => {
+    this.clickHandle = (evt: Event) => {
       const e = evt || window.event;
-      const target = e.target || e.srcElement;
+      const target = (e.target || e.srcElement) as HTMLElement;
       const tagName = target.tagName.toLowerCase();
       // 需要判断的核心是treeNodeContent这个div节点
-      const treeNodeCon = tagName === 'div' ? target : target.parentNode;
+      const treeNodeCon = (tagName === 'div' ? target : target.parentNode) as ExtendNode;
       // 判断是否为展开节点
       if (treeNodeCon.hasAttribute('role')) {
-        simpleTree.toggleExpand(treeNodeCon);
+        SimpleTree.toggleExpand(treeNodeCon);
       } else if (this.opts.click) {
         this.toggleActive(treeNodeCon);
         this.opts.click(e, treeNodeCon.$$nodeData);
@@ -178,11 +238,11 @@ export default class simpleTree {
     };
 
     // 双击事件
-    this.dblclickHandle = evt => {
+    this.dblclickHandle = (evt: Event): void => {
       const e = evt || window.event;
-      const target = e.target || e.srcElement;
+      const target = (e.target || e.srcElement) as HTMLElement;
       const tagName = target.tagName.toLowerCase();
-      const treeNodeCon = tagName === 'div' ? target : target.parentNode;
+      const treeNodeCon = (tagName === 'div' ? target : target.parentNode) as ExtendNode;
       if (!treeNodeCon.hasAttribute('role')) {
         // callback
         if (this.opts.dblclick) {
@@ -193,7 +253,8 @@ export default class simpleTree {
     };
 
     this.domRefs.treeWrapper.addEventListener('click', this.clickHandle, false);
-    this.opts.dblclick && this.domRefs.treeWrapper.addEventListener('dblclick', this.dblclickHandle, false);
+    this.opts.dblclick &&
+      this.domRefs.treeWrapper.addEventListener('dblclick', this.dblclickHandle, false);
 
     return this;
   }
@@ -203,7 +264,7 @@ export default class simpleTree {
    * @param  Node treeNodeCon
    * 切换高亮
    */
-  toggleActive(treeNodeCon) {
+  toggleActive(treeNodeCon: ExtendNode) {
     this.activeItem && this.activeItem.classList && this.activeItem.classList.remove('active');
     treeNodeCon.classList.add('active');
     this.activeItem = treeNodeCon;
@@ -253,13 +314,14 @@ export default class simpleTree {
    * 折叠切换
    * @return null
    */
-  static toggleExpand(treeNodeCon) {
+  static toggleExpand(treeNodeCon: ExtendNode) {
+    const firstChild = treeNodeCon.firstChild as HTMLElement;
     if (treeNodeCon.getAttribute('expand') === 'true') {
-      treeNodeCon.firstChild.classList.remove('down');
-      treeNodeCon.setAttribute('expand', false);
+      firstChild.classList.remove('down');
+      treeNodeCon.setAttribute('expand', 'false');
     } else {
-      treeNodeCon.firstChild.classList.add('down');
-      treeNodeCon.setAttribute('expand', true);
+      firstChild.classList.add('down');
+      treeNodeCon.setAttribute('expand', 'true');
     }
     this.slideAnimate(treeNodeCon);
   }
@@ -269,31 +331,35 @@ export default class simpleTree {
    * slide动画
    * @return null
    */
-  static slideAnimate(treeNodeCon) {
-    const group = treeNodeCon.nextElementSibling;
+  static slideAnimate(treeNodeCon: HTMLElement) {
+    const group = treeNodeCon.nextElementSibling as ExtendNode;
 
-    if (!group.$$transitionendHandle) {
-      group.$$transitionendHandle = this.transitionendHandle.bind(this, group);
-      group.addEventListener(TRANSITIONEND, group.$$transitionendHandle, false);
-    }
+    if (group !== null) {
+      if (!group.$$transitionendHandle) {
+        group.$$transitionendHandle = this.transitionendHandle.bind(this, group);
+        group.addEventListener(TRANSITIONEND, group.$$transitionendHandle, false);
+      }
 
-    const expand = treeNodeCon.getAttribute('expand') === 'true';
+      const expand = treeNodeCon.getAttribute('expand') === 'true';
 
-    if (!expand) {
-      group.style.height = '';
-      const height = group.offsetHeight;
-      nextFrame(() => {
-        group.style.height = `${height}px`;
-        nextFrame(() => group.style.height = 0);
-      });
-    } else {
-      group.style.display = '';
-      group.style.height = '';
-      const height = group.offsetHeight;
-      nextFrame(() => {
-        group.style.height = 0;
-        nextFrame(() => group.style.height = `${height}px`);
-      });
+      // 展开
+      if (!expand) {
+        group.style.height = '';
+        const height = group.offsetHeight;
+        nextFrame(() => {
+          group.style.height = `${height}px`;
+          nextFrame(() => (group.style.height = '0'));
+        });
+      } else {
+        // 收缩
+        group.style.display = '';
+        group.style.height = '';
+        const height = group.offsetHeight;
+        nextFrame(() => {
+          group.style.height = '0';
+          nextFrame(() => (group.style.height = `${height}px`));
+        });
+      }
     }
   }
 
@@ -302,7 +368,7 @@ export default class simpleTree {
    * 过渡事件
    * @return null
    */
-  static transitionendHandle(el) {
+  static transitionendHandle(el: ExtendNode) {
     const isShow = el.style.height !== '0px';
     if (isShow) {
       el.style.height = '';
@@ -318,4 +384,4 @@ export default class simpleTree {
   }
 }
 
-simpleTree.version = '2.0.2';
+SimpleTree.version = '3.0.0';

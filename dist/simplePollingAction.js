@@ -1,1 +1,69 @@
-!function(n,t){"object"==typeof exports&&"undefined"!=typeof module?module.exports=t():"function"==typeof define&&define.amd?define(t):n.simplePollingAction=t()}(this,function(){"use strict";var n=function(){function i(n,t){for(var e=0;e<t.length;e++){var i=t[e];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(n,i.key,i)}}return function(n,t,e){return t&&i(n.prototype,t),e&&i(n,e),n}}();return function(){function i(n){var t=1<arguments.length&&void 0!==arguments[1]?arguments[1]:1e3,e=2<arguments.length&&void 0!==arguments[2]&&arguments[2];if(function(n,t){if(!(n instanceof t))throw new TypeError("Cannot call a class as a function")}(this,i),this.running=!1,this.time=t,this.immediate=e,n){if("function"!=typeof n)throw new Error("参数1 必须是个函数");this.callback=n}else this.callback=null;this.timer=null}return n(i,[{key:"start",value:function(){var t=this;this.immediate&&this.callback(),this.running=!0;return function n(){t.timer=setTimeout(function(){return t.running?(t.callback(),n()):null},t.time)}(),this}},{key:"cancel",value:function(){this.running=!1,this.timer&&clearTimeout(this.timer),this.timer=null}}]),i}()});
+(function (global, factory) {
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+  typeof define === 'function' && define.amd ? define(factory) :
+  (global = global || self, global.simplePollingAction = factory());
+}(this, function () { 'use strict';
+
+  /**
+   * @class SimplePollingAction
+   * @param {Function}  callback[回调函数]
+   * @param {Number}  time[轮询时间]
+   * @param {immediate}  immediate[是否立即执行回调函数]
+   * @description  通过给定的TIME进行轮询操作
+   */
+  var SimplePollingAction = /** @class */ (function () {
+      function SimplePollingAction(callback, time, immediate) {
+          if (time === void 0) { time = 1000; }
+          if (immediate === void 0) { immediate = false; }
+          // 执行状态
+          this.running = false;
+          // 轮询间隔
+          this.time = time;
+          // 是否立即执行
+          this.immediate = immediate;
+          // callback判断
+          if (callback) {
+              if (typeof callback === 'function') {
+                  this.callback = callback;
+              }
+              else {
+                  throw new Error('参数1 必须是个函数');
+              }
+          }
+          else {
+              this.callback = null;
+          }
+          // timer控制
+          this.timer = null;
+      }
+      // 执行轮询
+      SimplePollingAction.prototype.start = function () {
+          var _this = this;
+          // 是否立即执行
+          this.immediate && this.callback && this.callback();
+          this.running = true;
+          var onAction = function () {
+              _this.timer = setTimeout(function () {
+                  if (_this.running) {
+                      _this.callback && _this.callback();
+                      return onAction();
+                  }
+                  return null;
+              }, _this.time);
+          };
+          onAction();
+          return this;
+      };
+      // 取消轮询
+      SimplePollingAction.prototype.cancel = function () {
+          this.running = false;
+          this.timer && clearTimeout(this.timer);
+          this.timer = null;
+      };
+      return SimplePollingAction;
+  }());
+
+  return SimplePollingAction;
+
+}));
+//# sourceMappingURL=simplePollingAction.js.map

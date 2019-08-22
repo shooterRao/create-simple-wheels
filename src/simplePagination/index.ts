@@ -1,10 +1,30 @@
 import './style.less';
 import { assign, isDOM } from '../utils/index';
 
+interface Options {
+  baseNode: HTMLElement | null;
+  pageControl: number;
+  containerCN: string;
+  listCN: string;
+  activeListCN: string;
+  prevBtnCN: string;
+  nextBtnCN: string;
+  disableBtnCN: string;
+  pageNumCN: string;
+  preText: string;
+  nextText: string;
+}
+
 export default class simplePagination {
-  constructor(totalPage, opts) {
+  totalPage: number;
+  currentPage: number;
+  opts: Options;
+  domRefs: any;
+  clickHandle: ((evt: Event) => void) | null;
+  static version: string;
+  constructor(totalPage: number, opts: Options) {
     // CN为className简写
-    const defaultOpts = {
+    const defaultOpts: Options = {
       baseNode: null, // 必须要传，分页组件挂载的节点
       pageControl: 2, // 当前页面显示前后多少页
       containerCN: 'page-container',
@@ -52,7 +72,7 @@ export default class simplePagination {
     this.domRefs.containerNode.className = containerCN;
     const pageContent = this.showPages(currentPage, totalPage);
     this.domRefs.containerNode.innerHTML = pageContent;
-    baseNode.appendChild(this.domRefs.containerNode);
+    baseNode!.appendChild(this.domRefs.containerNode);
     return this;
   }
 
@@ -62,12 +82,12 @@ export default class simplePagination {
    */
   bindEvent() {
     const { prevBtnCN, nextBtnCN } = this.opts;
-    this.clickHandle = evt => {
+    this.clickHandle = (evt: Event) => {
       const e = evt || window.event;
-      const target = e.target || e.srcElement;
+      const target = (e.target || e.srcElement) as HTMLElement;
       if (target.dataset.page) {
         const { page } = target.dataset;
-        this.goToPage(page);
+        this.goToPage(+page);
       } else if (target.classList) {
         // 上一页btn
         if (target.classList.contains(prevBtnCN)) {
@@ -89,8 +109,8 @@ export default class simplePagination {
    * 页面跳转
    * @param {Strng|Number} page
    */
-  goToPage(n) {
-    const page = +n; // 传入的page如果为String，转为Number
+  goToPage(n: number) {
+    const page = n; // 传入的page如果为String，转为Number
     const { totalPage } = this;
     // 边缘判断
     if (page === this.currentPage || page > totalPage || page < 1) {
@@ -98,7 +118,7 @@ export default class simplePagination {
     }
     this.currentPage = page;
     // 派发自定义事件
-    this.opts.baseNode.dispatchEvent(
+    this.opts.baseNode!.dispatchEvent(
       // 把page传到事件回调参数里面
       new CustomEvent('pageChange', { detail: { page } })
     );
@@ -113,7 +133,7 @@ export default class simplePagination {
    * 核心算法，显示页数函数
    * @param {Number} 当前页数、总页数
    */
-  showPages(page, total) {
+  showPages(page: number, total: number) {
     const {
       listCN,
       activeListCN,
@@ -174,9 +194,9 @@ export default class simplePagination {
    */
   destroyed() {
     this.domRefs.containerNode.removeEventListener('click', this.clickHandle, false);
-    this.opts.baseNode.removeChild(this.domRefs.containerNode);
+    this.opts.baseNode!.removeChild(this.domRefs.containerNode);
     this.clickHandle = null;
   }
 }
 
-simplePagination.version = '1.0';
+simplePagination.version = '2.0';
