@@ -16,7 +16,7 @@ type SimpleAnimate = {
   animateType: AnimateType;
   defaultOpts: DefaultOpts;
   extend(type: string): void;
-  play(options: DefaultOpts): void;
+  play(options: DefaultOpts): Promise<undefined>;
 };
 
 const simpleAnimate: SimpleAnimate = {
@@ -59,7 +59,7 @@ const simpleAnimate: SimpleAnimate = {
       }
       return <Promise>
   */
-  play(options) {
+  play(options): Promise<undefined> {
     return new Promise(resolve => {
       const opts = Object.assign({}, this.defaultOpts, options);
       const { to, from, type, during, callback } = opts;

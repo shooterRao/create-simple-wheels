@@ -116,7 +116,7 @@ export default class SimpleTree implements SimpleTreeItf {
    * @param {number} level 层级控制
    * @return null
    */
-  initTree(parentNode: HTMLElement, group: HTMLElement, data?: TreeData[], level = 0) {
+  initTree(parentNode: HTMLElement, group: HTMLElement, data?: TreeData[], level:number = 0) {
     let treeNode;
     let treeNodeContent: ExtendNode; // li -> div
 

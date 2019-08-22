@@ -53,7 +53,7 @@ Q: 如何运行？
 
 A: `git clone git@github.com:shooterRao/create-simple-wheels.git`
 
-`npm i`
+`yarn`
 
 开发`yarn dev`
 
