@@ -13,7 +13,7 @@ declare type SimpleAnimate = {
     animateType: AnimateType;
     defaultOpts: DefaultOpts;
     extend(type: string): void;
-    play(options: DefaultOpts): void;
+    play(options: DefaultOpts): Promise<undefined>;
 };
 declare const simpleAnimate: SimpleAnimate;
 export default simpleAnimate;

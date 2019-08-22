@@ -77,7 +77,6 @@
           window.setTimeout(fn, 16);
       }
   };
-  //# sourceMappingURL=index.js.map
 
   var preClsName = 'simple-tree';
   var TRANSITIONEND = window.ontransitionend === undefined ? 'webkitTransitionEnd' : 'transitionend';
