@@ -6,9 +6,9 @@
  * @description  通过给定的TIME进行轮询操作
  */
 export default class SimplePollingAction {
-  private running: boolean;
-  private immediate: boolean;
-  private timer: any;
+  running: boolean;
+  immediate: boolean;
+  timer: any;
   time: number;
   callback: (() => void) | null;
   constructor(callback: () => void, time: number = 1000, immediate: boolean = false) {
