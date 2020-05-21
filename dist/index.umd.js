@@ -382,10 +382,10 @@
       return SimplePollingAction;
   }());
 
-  var css$1 = ".simple-tree.tree-wrapper {\n  width: 100%;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.simple-tree.tree-wrapper ul {\n  list-style: none;\n}\n.simple-tree.tree-wrapper .tree-base-node:hover {\n  cursor: pointer;\n}\n.simple-tree.tree-wrapper .tree-base-node .tree-group {\n  transition: height 0.3s ease;\n  overflow: hidden;\n}\n.simple-tree.tree-wrapper .tree-base-node .tree-node-content {\n  transition: color 0.3s, background 0.3s;\n  line-height: 36px;\n  height: 36px;\n}\n.simple-tree.tree-wrapper .tree-base-node .tree-node-content:hover {\n  background: #ecf5ff;\n}\n.simple-tree.tree-wrapper .tree-base-node .tree-node-content .tree-node-title {\n  padding-left: 3px;\n}\n.simple-tree.tree-wrapper .tree-base-node .tree-node-content.active {\n  color: #2d8cf0;\n}\n.simple-tree.tree-wrapper .tree-base-node .tree-node-content.active {\n  background: #ecf5ff;\n}\n.simple-tree.tree-wrapper .tree-base-node .tree-node-content .tree-node-icon.icon-angle {\n  display: inline-block;\n  cursor: pointer;\n  width: 0;\n  height: 0;\n  margin-left: 6px;\n  margin-right: 3px;\n  border: 5px solid transparent;\n  border-right-width: 0;\n  border-left-width: 6px;\n  border-left-color: #000;\n  transform: rotate(0);\n  transition: transform 0.3s ease;\n}\n.simple-tree.tree-wrapper .tree-base-node .tree-node-content .tree-node-icon.icon-angle.down {\n  transform: rotate(90deg);\n}\n";
+  var css$1 = ".simple-tree.tree-wrapper {\n  width: 100%;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.simple-tree.tree-wrapper ul {\n  list-style: none;\n}\n.simple-tree.tree-wrapper .tree-base-node:hover {\n  cursor: pointer;\n}\n.simple-tree.tree-wrapper .tree-base-node .tree-group {\n  transition: height 0.3s ease;\n  overflow: hidden;\n}\n.simple-tree.tree-wrapper .tree-base-node .tree-node-content {\n  transition: color 0.3s, background 0.3s;\n  line-height: 36px;\n  height: 36px;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n.simple-tree.tree-wrapper .tree-base-node .tree-node-content:hover {\n  background: #ecf5ff;\n}\n.simple-tree.tree-wrapper .tree-base-node .tree-node-content .tree-node-title {\n  padding-left: 3px;\n}\n.simple-tree.tree-wrapper .tree-base-node .tree-node-content.active {\n  color: #2d8cf0;\n}\n.simple-tree.tree-wrapper .tree-base-node .tree-node-content.active {\n  background: #ecf5ff;\n}\n.simple-tree.tree-wrapper .tree-base-node .tree-node-content .tree-node-icon.icon-angle {\n  display: inline-block;\n  cursor: pointer;\n  width: 0;\n  height: 0;\n  margin-left: 6px;\n  margin-right: 3px;\n  border: 5px solid transparent;\n  border-right-width: 0;\n  border-left-width: 6px;\n  border-left-color: #000;\n  transform: rotate(0);\n  transition: transform 0.3s ease;\n}\n.simple-tree.tree-wrapper .tree-base-node .tree-node-content .tree-node-icon.icon-angle.down {\n  transform: rotate(90deg);\n}\n";
   styleInject(css$1);
 
-  var preClsName = 'simple-tree';
+  var PRECLSNAME = 'simple-tree';
   var TRANSITIONEND = window.ontransitionend === undefined ? 'webkitTransitionEnd' : 'transitionend';
   var SimpleTree = /** @class */ (function () {
       function SimpleTree(options) {
@@ -394,11 +394,12 @@
               paddingLeft: 16,
               treeData: [],
               frontIconClassName: null,
+              titleKey: "title",
               dblclick: null,
               click: null,
               createTreeNodeContent: null,
               templates: {
-                  treeWrapper: "<div class=\"" + preClsName + " tree-wrapper\"></div>",
+                  treeWrapper: "<div class=\"" + PRECLSNAME + " tree-wrapper\"></div>",
                   treeBaseNode: '<ul class="tree-base-node"></ul>',
                   treeNode: '<li class="tree-node"></li>',
                   treeGroup: '<ul class="tree-group"></ul>',
@@ -443,6 +444,8 @@
           if (level === void 0) { level = 0; }
           var treeNode;
           var treeNodeContent; // li -> div
+          // 缓存 titleKey
+          var titleKey = this.opts.titleKey;
           if (!data)
               return;
           // data为空情况下，加个空的ul进去
@@ -461,7 +464,7 @@
                   // 增加标识
                   treeNodeContent.setAttribute('role', 'folder');
                   treeNodeContent.innerHTML = "<span class=\"tree-node-icon icon-angle " + (expand &&
-                      'down') + "\"></span><span class=\"tree-node-title\">" + data[i].title + "</span>";
+                      'down') + "\"></span><span class=\"tree-node-title\">" + data[i][titleKey] + "</span>";
                   if (expand) {
                       treeNodeContent.setAttribute('expand', 'true');
                   }
@@ -472,10 +475,10 @@
               }
               else if (this.opts.frontIconClassName) {
                   var clas = this.opts.frontIconClassName;
-                  treeNodeContent.innerHTML = "<span class=\"tree-node-icon " + clas + "\"></span><span class=\"tree-node-title\">" + data[i].title + "</span>";
+                  treeNodeContent.innerHTML = "<span class=\"tree-node-icon " + clas + "\"></span><span class=\"tree-node-title\">" + data[i][titleKey] + "</span>";
               }
               else {
-                  treeNodeContent.innerHTML = "<span class=\"tree-node-title\">" + data[i].title + "</span>";
+                  treeNodeContent.innerHTML = "<span class=\"tree-node-title\">" + data[i][titleKey] + "</span>";
               }
               // 设置padding
               treeNodeContent.style.paddingLeft = level * this.opts.paddingLeft + "px";
@@ -684,7 +687,7 @@
       };
       return SimpleTree;
   }());
-  SimpleTree.version = '3.0.0';
+  SimpleTree.version = '3.0.1';
 
   exports.simpleAnimate = simpleAnimate;
   exports.simplePagination = simplePagination;

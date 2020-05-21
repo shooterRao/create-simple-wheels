@@ -1,4 +1,4 @@
-## 简单的树组件
+## 树组件
 
 [预览DEMO](http://shooterblog.site/create-simple-wheels/src/simpleTree/index.html)
 
@@ -22,7 +22,6 @@ var tree = new simpleTree({
   baseNode: document.getElementById('tree'),
   treeData: treeData,
   frontIconClassName: 'icon-wd', // 文字前面的className
-  animateSpeed: 'fast', // 折叠动画速度
   click: function(event, data) {
 
   },

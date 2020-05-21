@@ -1,31 +1,33 @@
 import './index.less';
 import { assign, createNode, hasChild, nextFrame } from '../utils/index';
 
-const preClsName = 'simple-tree';
+const PRECLSNAME = 'simple-tree';
 const TRANSITIONEND =
   window.ontransitionend === undefined ? 'webkitTransitionEnd' : 'transitionend';
 
 // 渲染源数据
-interface TreeData {
+export interface TreeData {
   title?: string;
   expand?: boolean;
   children?: [];
   createNodeContent?: (node: ExtendNode, nodeData: TreeData) => void;
+  [key: string]: any;
 }
 
 // 构造参数
-interface Options {
+export interface Options {
   baseNode: HTMLElement;
   treeData: TreeData[];
   paddingLeft: number;
   frontIconClassName?: string;
+  titleKey: string; // 标题取对象哪个字段
   templates: OptTemplate;
   dblclick?: (e: Event, data: TreeData) => {};
   click?: (e: Event, data: TreeData) => {};
   createNodeContent?: (node: ExtendNode, nodeData: TreeData) => void;
 }
 
-interface OptTemplate {
+export interface OptTemplate {
   treeWrapper: string;
   treeBaseNode: string;
   treeNode: string;
@@ -40,14 +42,14 @@ interface OptTemplate {
 //   treeBaseNode: T;
 // }
 
-interface SimpleTreeItf {
+export interface SimpleTreeItf {
   opts: Options;
   activeItem: HTMLElement | null;
   destroyed(): void;
   getActiveItem(): HTMLElement | null;
 }
 
-interface ExtendNode extends HTMLElement {
+export interface ExtendNode extends HTMLElement {
   $$nodeData: TreeData;
   $$transitionendHandle?: any;
 }
@@ -66,11 +68,12 @@ export default class SimpleTree implements SimpleTreeItf {
       paddingLeft: 16,
       treeData: [],
       frontIconClassName: null, // title前面的icon的className
+      titleKey: "title", // 标题取对象哪个字段
       dblclick: null,
       click: null,
       createTreeNodeContent: null, // 构造treeNodeContent时的回调函数
       templates: {
-        treeWrapper: `<div class="${preClsName} tree-wrapper"></div>`,
+        treeWrapper: `<div class="${PRECLSNAME} tree-wrapper"></div>`,
         treeBaseNode: '<ul class="tree-base-node"></ul>',
         treeNode: '<li class="tree-node"></li>',
         treeGroup: '<ul class="tree-group"></ul>',
@@ -120,6 +123,9 @@ export default class SimpleTree implements SimpleTreeItf {
     let treeNode;
     let treeNodeContent: ExtendNode; // li -> div
 
+    // 缓存 titleKey
+    const titleKey = this.opts.titleKey;
+
     if (!data) return;
 
     // data为空情况下，加个空的ul进去
@@ -140,7 +146,7 @@ export default class SimpleTree implements SimpleTreeItf {
         // 增加标识
         treeNodeContent.setAttribute('role', 'folder');
         treeNodeContent.innerHTML = `<span class="tree-node-icon icon-angle ${expand &&
-          'down'}"></span><span class="tree-node-title">${data[i].title}</span>`;
+          'down'}"></span><span class="tree-node-title">${data[i][titleKey]}</span>`;
 
         if (expand) {
           treeNodeContent.setAttribute('expand', 'true');
@@ -152,10 +158,10 @@ export default class SimpleTree implements SimpleTreeItf {
       } else if (this.opts.frontIconClassName) {
         const clas = this.opts.frontIconClassName;
         treeNodeContent.innerHTML = `<span class="tree-node-icon ${clas}"></span><span class="tree-node-title">${
-          data[i].title
+          data[i][titleKey]
         }</span>`;
       } else {
-        treeNodeContent.innerHTML = `<span class="tree-node-title">${data[i].title}</span>`;
+        treeNodeContent.innerHTML = `<span class="tree-node-title">${data[i][titleKey]}</span>`;
       }
 
       // 设置padding
@@ -384,4 +390,4 @@ export default class SimpleTree implements SimpleTreeItf {
   }
 }
 
-SimpleTree.version = '3.0.0';
+SimpleTree.version = '3.0.1';

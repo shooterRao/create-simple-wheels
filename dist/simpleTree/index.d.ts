@@ -1,34 +1,36 @@
 import './index.less';
-interface TreeData {
+export interface TreeData {
     title?: string;
     expand?: boolean;
     children?: [];
     createNodeContent?: (node: ExtendNode, nodeData: TreeData) => void;
+    [key: string]: any;
 }
-interface Options {
+export interface Options {
     baseNode: HTMLElement;
     treeData: TreeData[];
     paddingLeft: number;
     frontIconClassName?: string;
+    titleKey: string;
     templates: OptTemplate;
     dblclick?: (e: Event, data: TreeData) => {};
     click?: (e: Event, data: TreeData) => {};
     createNodeContent?: (node: ExtendNode, nodeData: TreeData) => void;
 }
-interface OptTemplate {
+export interface OptTemplate {
     treeWrapper: string;
     treeBaseNode: string;
     treeNode: string;
     treeGroup: string;
     treeNodeContent: string;
 }
-interface SimpleTreeItf {
+export interface SimpleTreeItf {
     opts: Options;
     activeItem: HTMLElement | null;
     destroyed(): void;
     getActiveItem(): HTMLElement | null;
 }
-interface ExtendNode extends HTMLElement {
+export interface ExtendNode extends HTMLElement {
     $$nodeData: TreeData;
     $$transitionendHandle?: any;
 }
@@ -119,4 +121,3 @@ export default class SimpleTree implements SimpleTreeItf {
      */
     static transitionendHandle(el: ExtendNode): void;
 }
-export {};
