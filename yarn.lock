@@ -91,9 +91,9 @@ abbrev@1:
   integrity sha1-+PLIh60Qv2f2NPAFtph/7TF5qsg=
 
 acorn@^7.0.0:
-  version "7.0.0"
-  resolved "https://registry.npm.taobao.org/acorn/download/acorn-7.0.0.tgz#26b8d1cd9a9b700350b71c0905546f64d1284e7a"
-  integrity sha1-JrjRzZqbcANQtxwJBVRvZNEoTno=
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/acorn/-/acorn-7.2.0.tgz#17ea7e40d7c8640ff54a694c889c26f31704effe"
+  integrity sha512-apwXVmYVpQ34m/i71vrApRrRKCWQnZZF1+npOD0WV5xZFfwWOmKGQ2RWlfdy9vWITsenisM8M0Qeq8agcFHNiQ==
 
 ajv@^6.5.5:
   version "6.10.2"
