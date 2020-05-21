@@ -1,4 +1,4 @@
-## 树组件
+## 树组件 (轻松渲染3000+节点)
 
 [预览DEMO](http://shooterblog.site/create-simple-wheels/src/simpleTree/index.html)
 
@@ -18,17 +18,17 @@ define([simpleTree], function(simpleTree){
 ```
 
 ```javascript
-var tree = new simpleTree({
+const tree = new simpleTree({
   baseNode: document.getElementById('tree'),
   treeData: treeData,
-  frontIconClassName: 'icon-wd', // 文字前面的className
-  click: function(event, data) {
+  titleKey: "title", // 读取节点data哪个字段渲染title
+  click(event, data) {
 
   },
-  dblclick: function(event, data) {
+  dblclick(event, data) {
 
   },
-  createNodeContent: function(node, nodeData) {
+  createNodeContent(node, nodeData) {
     // node => dom节点
     // nodeData => 构造节点传入的数据
   }

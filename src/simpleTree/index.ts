@@ -19,7 +19,6 @@ export interface Options {
   baseNode: HTMLElement;
   treeData: TreeData[];
   paddingLeft: number;
-  frontIconClassName?: string;
   titleKey: string; // 标题取对象哪个字段
   templates: OptTemplate;
   dblclick?: (e: Event, data: TreeData) => {};
@@ -155,11 +154,6 @@ export default class SimpleTree implements SimpleTreeItf {
         }
 
         // 处理叶子节点
-      } else if (this.opts.frontIconClassName) {
-        const clas = this.opts.frontIconClassName;
-        treeNodeContent.innerHTML = `<span class="tree-node-icon ${clas}"></span><span class="tree-node-title">${
-          data[i][titleKey]
-        }</span>`;
       } else {
         treeNodeContent.innerHTML = `<span class="tree-node-title">${data[i][titleKey]}</span>`;
       }

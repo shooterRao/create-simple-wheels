@@ -10,7 +10,6 @@ export interface Options {
     baseNode: HTMLElement;
     treeData: TreeData[];
     paddingLeft: number;
-    frontIconClassName?: string;
     titleKey: string;
     templates: OptTemplate;
     dblclick?: (e: Event, data: TreeData) => {};

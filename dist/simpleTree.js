@@ -77,7 +77,6 @@
           window.setTimeout(fn, 16);
       }
   };
-  //# sourceMappingURL=index.js.map
 
   var PRECLSNAME = 'simple-tree';
   var TRANSITIONEND = window.ontransitionend === undefined ? 'webkitTransitionEnd' : 'transitionend';
@@ -166,10 +165,6 @@
                       treeNodeContent.setAttribute('expand', 'false');
                   }
                   // 处理叶子节点
-              }
-              else if (this.opts.frontIconClassName) {
-                  var clas = this.opts.frontIconClassName;
-                  treeNodeContent.innerHTML = "<span class=\"tree-node-icon " + clas + "\"></span><span class=\"tree-node-title\">" + data[i][titleKey] + "</span>";
               }
               else {
                   treeNodeContent.innerHTML = "<span class=\"tree-node-title\">" + data[i][titleKey] + "</span>";
