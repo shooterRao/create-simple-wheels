@@ -151,10 +151,14 @@
           : item && typeof item === 'object' && item.nodeType === 1 && typeof item.nodeName === 'string';
   };
   var hasChild = function (nodeData) {
-      if (!nodeData.children) {
+      if (nodeData.children == null) {
           return false;
       }
-      return nodeData.children.length !== 0;
+      // 空目录支持
+      if (nodeData.children.length === 0) {
+          return true;
+      }
+      return nodeData.children.length > 0;
   };
   // 下一帧执行
   var nextFrame = function (fn) {
@@ -473,10 +477,6 @@
                   }
                   // 处理叶子节点
               }
-              else if (this.opts.frontIconClassName) {
-                  var clas = this.opts.frontIconClassName;
-                  treeNodeContent.innerHTML = "<span class=\"tree-node-icon " + clas + "\"></span><span class=\"tree-node-title\">" + data[i][titleKey] + "</span>";
-              }
               else {
                   treeNodeContent.innerHTML = "<span class=\"tree-node-title\">" + data[i][titleKey] + "</span>";
               }
@@ -506,7 +506,9 @@
       SimpleTree.prototype.initState = function () {
           var treeNodeContents = this.domRefs.treeNodeContents;
           var createNodeContent = this.opts.createNodeContent;
-          treeNodeContents.forEach(function (node) {
+          var selectedItem = null; // 避免出现多个 selected 为 true 的节点
+          for (var i = 0, len = treeNodeContents.length; i < len; i++) {
+              var node = treeNodeContents[i];
               var $$nodeData = node.$$nodeData;
               if (hasChild($$nodeData) && !$$nodeData.expand) {
                   var nextEle = node.nextElementSibling;
@@ -518,7 +520,13 @@
               else {
                   createNodeContent && createNodeContent(node, $$nodeData);
               }
-          });
+              if ($$nodeData.selected && !selectedItem) {
+                  this.toggleActive(node);
+                  this.opts.click && this.opts.click($$nodeData);
+                  this.opts.dblclick && this.opts.dblclick($$nodeData);
+                  selectedItem = true;
+              }
+          }
           return this;
       };
       /**
@@ -551,7 +559,7 @@
               }
               else if (_this.opts.click) {
                   _this.toggleActive(treeNodeCon);
-                  _this.opts.click(e, treeNodeCon.$$nodeData);
+                  _this.opts.click(treeNodeCon.$$nodeData, e);
               }
           };
           // 双击事件
@@ -564,7 +572,7 @@
                   // callback
                   if (_this.opts.dblclick) {
                       _this.toggleActive(treeNodeCon);
-                      _this.opts.dblclick(e, treeNodeCon.$$nodeData);
+                      _this.opts.dblclick(treeNodeCon.$$nodeData, e);
                   }
               }
           };
@@ -687,7 +695,7 @@
       };
       return SimpleTree;
   }());
-  SimpleTree.version = '3.0.1';
+  SimpleTree.version = '3.0.2';
 
   exports.simpleAnimate = simpleAnimate;
   exports.simplePagination = simplePagination;

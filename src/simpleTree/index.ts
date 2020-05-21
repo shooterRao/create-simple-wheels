@@ -9,6 +9,7 @@ const TRANSITIONEND =
 export interface TreeData {
   title?: string;
   expand?: boolean;
+  selected?: boolean;
   children?: [];
   createNodeContent?: (node: ExtendNode, nodeData: TreeData) => void;
   [key: string]: any;
@@ -21,8 +22,8 @@ export interface Options {
   paddingLeft: number;
   titleKey: string; // 标题取对象哪个字段
   templates: OptTemplate;
-  dblclick?: (e: Event, data: TreeData) => {};
-  click?: (e: Event, data: TreeData) => {};
+  dblclick?: (data: TreeData, e?: Event) => {};
+  click?: (data: TreeData, e?: Event) => {};
   createNodeContent?: (node: ExtendNode, nodeData: TreeData) => void;
 }
 
@@ -189,7 +190,11 @@ export default class SimpleTree implements SimpleTreeItf {
   initState() {
     const { treeNodeContents } = this.domRefs;
     const { createNodeContent } = this.opts;
-    treeNodeContents.forEach((node: ExtendNode) => {
+
+    let selectedItem = null;// 避免出现多个 selected 为 true 的节点
+
+    for (let i = 0, len = treeNodeContents.length; i < len; i++) {
+      const node: ExtendNode = treeNodeContents[i];
       const { $$nodeData } = node;
       if (hasChild($$nodeData) && !$$nodeData.expand) {
         const nextEle = node.nextElementSibling as HTMLElement;
@@ -200,7 +205,14 @@ export default class SimpleTree implements SimpleTreeItf {
       } else {
         createNodeContent && createNodeContent(node, $$nodeData);
       }
-    });
+
+      if ($$nodeData.selected && !selectedItem) {
+        this.toggleActive(node);
+        this.opts.click && this.opts.click($$nodeData);
+        this.opts.dblclick && this.opts.dblclick($$nodeData);
+        selectedItem = true;
+      }
+    }
     return this;
   }
 
@@ -233,7 +245,7 @@ export default class SimpleTree implements SimpleTreeItf {
         SimpleTree.toggleExpand(treeNodeCon);
       } else if (this.opts.click) {
         this.toggleActive(treeNodeCon);
-        this.opts.click(e, treeNodeCon.$$nodeData);
+        this.opts.click(treeNodeCon.$$nodeData, e);
       }
     };
 
@@ -247,7 +259,7 @@ export default class SimpleTree implements SimpleTreeItf {
         // callback
         if (this.opts.dblclick) {
           this.toggleActive(treeNodeCon);
-          this.opts.dblclick(e, treeNodeCon.$$nodeData);
+          this.opts.dblclick(treeNodeCon.$$nodeData, e);
         }
       }
     };
@@ -384,4 +396,4 @@ export default class SimpleTree implements SimpleTreeItf {
   }
 }
 
-SimpleTree.version = '3.0.1';
+SimpleTree.version = '3.0.2';

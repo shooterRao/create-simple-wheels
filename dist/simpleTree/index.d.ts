@@ -2,6 +2,7 @@ import './index.less';
 export interface TreeData {
     title?: string;
     expand?: boolean;
+    selected?: boolean;
     children?: [];
     createNodeContent?: (node: ExtendNode, nodeData: TreeData) => void;
     [key: string]: any;
@@ -12,8 +13,8 @@ export interface Options {
     paddingLeft: number;
     titleKey: string;
     templates: OptTemplate;
-    dblclick?: (e: Event, data: TreeData) => {};
-    click?: (e: Event, data: TreeData) => {};
+    dblclick?: (data: TreeData, e?: Event) => {};
+    click?: (data: TreeData, e?: Event) => {};
     createNodeContent?: (node: ExtendNode, nodeData: TreeData) => void;
 }
 export interface OptTemplate {

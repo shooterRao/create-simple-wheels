@@ -95,7 +95,7 @@
           title: '热门评价', id: '15'
         },
         {
-          title: '热门业务', id: '16'
+          title: '热门业务', id: '16', children: []
         }
       ]
     },
@@ -119,7 +119,7 @@
           ]
         },
         {
-          title: '热门评价', id: '15'
+          title: '热门评价', id: '15', selected: true
         },
         {
           title: '热门业务', id: '16',
@@ -134,7 +134,7 @@
     var tree = new simpleTree({
       baseNode: document.getElementById('tree'),
       treeData: treeData,
-      click: function (event, data) {
+      click: function (data) {
         console.log(data);
       },
       createNodeContent: function(node, nodeData) {

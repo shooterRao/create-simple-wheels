@@ -72,10 +72,14 @@ type NodeData = {
 }
 
 export const hasChild = (nodeData: NodeData): boolean => {
-  if (!nodeData.children) {
+  if (nodeData.children == null) {
     return false;
   }
-  return nodeData.children.length !== 0;
+  // 空目录支持
+  if (nodeData.children.length === 0) {
+    return true;
+  }
+  return nodeData.children.length > 0;
 };
 
 // 下一帧执行
