@@ -161,7 +161,6 @@ function SimpleAjax(config: SimpleAjaxConfig) {
     timeout && isNumber(timeout) && (request.timeout = timeout);
 
     request.onreadystatechange = function handleOnLoad() {
-      // status 非0都为 resolve 状态
       if (request.readyState === 4) {
         const responseData = responseType === 'text' ? request.responseText : request.response;
         const responseHeaders = request.getAllResponseHeaders();
