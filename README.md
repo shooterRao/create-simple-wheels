@@ -38,15 +38,15 @@ Q: 目前造了多少个轮子了？
 
 A:
 
-1.[树组件 轻松渲染3000+节点](https://github.com/shooterRao/create-simple-wheels/tree/master/src/simpleTree)
+1.[树组件 轻松渲染3000+节点](https://github.com/shooterRao/create-simple-wheels/tree/master/src/Tree)
 
-2.[分页组件](https://github.com/shooterRao/create-simple-wheels/tree/master/src/simplePagination)
+2.[分页组件](https://github.com/shooterRao/create-simple-wheels/tree/master/src/Pagination)
 
-3.[迷你动画库](https://github.com/shooterRao/create-simple-wheels/tree/master/src/simpleAnimate)
+3.[迷你动画库](https://github.com/shooterRao/create-simple-wheels/tree/master/src/Animate)
 
-4.[轮询工具类](https://github.com/shooterRao/create-simple-wheels/tree/master/src/simplePollingAction)
+4.[轮询工具类](https://github.com/shooterRao/create-simple-wheels/tree/master/src/PollingAction)
 
-5.[ajax请求库](https://github.com/shooterRao/create-simple-wheels/tree/master/src/simpleAjax)
+5.[ajax请求库](https://github.com/shooterRao/create-simple-wheels/tree/master/src/Ajax)
 
 Q: 技术栈和编译工具？
 

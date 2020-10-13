@@ -1,7 +1,7 @@
 {
   "name": "simplewheels",
   "version": "2.1.0",
-  "description": "",
+  "description": "simplewheels",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "scripts": {
@@ -22,7 +22,7 @@
     "pollingAction",
     "pagination",
     "animate",
-    "typescript"
+    "ajax"
   ],
   "author": "shooterRao",
   "license": "MIT",
