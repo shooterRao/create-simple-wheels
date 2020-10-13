@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script src="../../dist/simpleAjax.js"></script>
+  <script>
+
+    simpleAjax({
+      method: 'get',
+      url: 'http://localhost:3000/http/data',
+    }).then(res => {
+      console.log(res);
+    })
+
+    simpleAjax({
+      method: 'post',
+      url: 'http://localhost:3000/http/form',
+      data: 'a=123',
+    }).then(res => {
+      console.log(res);
+    })
+
+    simpleAjax({
+      method: 'post',
+      url: 'http://localhost:3000/http/json',
+      data: {
+        a: 123
+      }
+    }).then(res => {
+      console.log(res);
+    })
+
+    const formData = new FormData();
+    formData.append('file', new File(["foo"], "foo.txt", {
+      type: "text/plain"
+    }));
+    simpleAjax({
+      method: 'post',
+      url: 'http://localhost:3000/http/upload',
+      data: formData
+    });
+
+    // 错误请求自定义处理
+    simpleAjax({
+      method: 'get',
+      url: 'http://localhost:3000/http/getQueryy',
+      params: {
+        a: 123
+      },
+      validateStatus(status) {
+        return status === 200;
+      }
+    }).then(res => {
+      console.log(res);
+    }).catch(error => console.log(error));
+  </script>
+</body>
+
+</html>

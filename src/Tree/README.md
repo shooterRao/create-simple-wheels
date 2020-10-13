@@ -12,20 +12,9 @@
 
 How to use?
 
-方法一： 全局引入 `<script src="../dist/simpleTree.js"></script>`
-接着引入下面的方法
-
-方法二：AMD
-
 ```javascript
-define([simpleTree], function(simpleTree){
+import { simpleTree } from 'simplewheels';
 
-  引入下面方法
-
-})
-```
-
-```javascript
 const tree = new simpleTree({
   baseNode: document.getElementById('tree'),
   treeData: treeData,

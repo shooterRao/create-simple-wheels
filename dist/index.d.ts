@@ -1,5 +1,5 @@
-import simpleAnimate from './simpleAnimate/index';
-import simplePagination from './simplePagination/index';
-import simplePollingAction from './simplePollingAction/index';
-import simpleTree from './simpleTree/index';
+import simpleAnimate from './Animate/index';
+import simplePagination from './Pagination/index';
+import simplePollingAction from './PollingAction/index';
+import simpleTree from './Tree/index';
 export { simpleAnimate, simplePagination, simplePollingAction, simpleTree };

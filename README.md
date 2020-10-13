@@ -23,7 +23,8 @@ import {
   simpleAnimate,
   simplePagination,
   simplePollingAction,
-  simpleTree
+  simpleTree,
+  simpleAjax
   } from simplewheels;
 
 // 进入各组件文档查阅使用方式

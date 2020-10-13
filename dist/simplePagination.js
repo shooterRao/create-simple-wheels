@@ -62,7 +62,6 @@
           ? item instanceof HTMLElement
           : item && typeof item === 'object' && item.nodeType === 1 && typeof item.nodeName === 'string';
   };
-  //# sourceMappingURL=index.js.map
 
   var simplePagination = /** @class */ (function () {
       function simplePagination(totalPage, opts) {

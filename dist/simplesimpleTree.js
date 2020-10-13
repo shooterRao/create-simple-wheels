@@ -1,7 +1,7 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
-  (global = global || self, global.simpleTree = factory());
+  (global = global || self, global.simplesimpleTree = factory());
 }(this, function () { 'use strict';
 
   function styleInject(css, ref) {
@@ -393,4 +393,4 @@
   return SimpleTree;
 
 }));
-//# sourceMappingURL=simpleTree.js.map
+//# sourceMappingURL=simplesimpleTree.js.map

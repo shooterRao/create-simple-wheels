@@ -191,7 +191,7 @@ export default class SimpleTree implements SimpleTreeItf {
     const { treeNodeContents } = this.domRefs;
     const { createNodeContent } = this.opts;
 
-    let selectedItem = null;// 避免出现多个 selected 为 true 的节点
+    let selectedItem: null | boolean = null;// 避免出现多个 selected 为 true 的节点
 
     for (let i = 0, len = treeNodeContents.length; i < len; i++) {
       const node: ExtendNode = treeNodeContents[i];
