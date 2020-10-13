@@ -36,7 +36,7 @@ A: 最近在做项目的时候，开始尝试自己写轮子(组件)，并已经
 
 Q: 目前造了多少个轮子了？
 
-A: 4个
+A:
 
 1.[树组件 轻松渲染3000+节点](https://github.com/shooterRao/create-simple-wheels/tree/master/src/simpleTree)
 
@@ -45,6 +45,8 @@ A: 4个
 3.[迷你动画库](https://github.com/shooterRao/create-simple-wheels/tree/master/src/simpleAnimate)
 
 4.[轮询工具类](https://github.com/shooterRao/create-simple-wheels/tree/master/src/simplePollingAction)
+
+5.[ajax请求库](https://github.com/shooterRao/create-simple-wheels/tree/master/src/simpleAjax)
 
 Q: 技术栈和编译工具？
 
