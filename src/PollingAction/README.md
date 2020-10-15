@@ -1,6 +1,6 @@
 ## 简单的轮询工具类
 
-[预览 DEMO](http://shooterblog.site/create-simple-wheels/src/simplePollingAction/index.html)
+[预览 DEMO](http://shooterblog.site/create-simple-wheels/src/PollingAction/index.html)
 
 > 请打开直接看文件源码
 

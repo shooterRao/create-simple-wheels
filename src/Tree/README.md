@@ -1,6 +1,6 @@
 ## 树组件 (轻松渲染3000+节点)
 
-[预览DEMO](http://shooterblog.site/create-simple-wheels/src/simpleTree/index.html)
+[预览DEMO](http://shooterblog.site/create-simple-wheels/src/Tree/index.html)
 
 ### 功能清单
 

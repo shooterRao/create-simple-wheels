@@ -1,6 +1,6 @@
 ## 简单的分页组件
 
-[预览DEMO](http://shooterblog.site/create-simple-wheels/src/simplePagination/index.html)
+[预览DEMO](http://shooterblog.site/create-simple-wheels/src/Pagination/index.html)
 
 How to use?
 

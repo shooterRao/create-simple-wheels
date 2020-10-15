@@ -1,6 +1,6 @@
 ## 不到 1kb 的小型动画库
 
-[预览 DEMO](http://shooterblog.site/create-simple-wheels/src/simpleAnimate/index.html)
+[预览 DEMO](http://shooterblog.site/create-simple-wheels/src/Animate/index.html)
 
 How to use?
 
