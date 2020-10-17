@@ -1,6 +1,6 @@
 ## 轻量的 ajax 请求工具
 
-类似`axios`使用方式，包括参数使用也一致，仅支持浏览器
+类似`axios`使用方式的ajax请求库，包括参数使用也一致，仅支持浏览器，非常轻量
 
 How to use?
 
@@ -8,7 +8,7 @@ How to use?
 
 ```ts
 interface SimpleAjaxConfig {
-  method: string;
+  method: 'get' | 'post' | 'put' | 'delete';
   url: string;
   withCredentials?: boolean;
   responseType?: 'json' | 'text' | 'blob' | 'document' | 'arraybuffer';

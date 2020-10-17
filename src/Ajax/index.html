@@ -46,6 +46,26 @@
       data: formData
     });
 
+    simpleAjax({
+      method: 'put',
+      url: 'http://localhost:3000/http/put',
+      data: {
+        a: 123
+      }
+    }).then(res => {
+      console.log(res);
+    })
+
+    simpleAjax({
+      method: 'delete',
+      url: 'http://localhost:3000/http/delete',
+      data: {
+        a: 123
+      }
+    }).then(res => {
+      console.log(res);
+    })
+
     // 错误请求自定义处理
     simpleAjax({
       method: 'get',

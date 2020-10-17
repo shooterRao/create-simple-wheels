@@ -4,7 +4,7 @@
  */
 
 export interface SimpleAjaxConfig {
-  method: string;
+  method: 'get' | 'post' | 'put' | 'delete';
   url: string;
   withCredentials?: boolean;
   responseType?: 'json' | 'text' | 'blob' | 'document' | 'arraybuffer';

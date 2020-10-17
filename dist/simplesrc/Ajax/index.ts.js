@@ -1,7 +1,7 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
-  (global = global || self, global.simpleAjax = factory());
+  (global = global || self, (global['simplesrc/Ajax/index'] = global['simplesrc/Ajax/index'] || {}, global['simplesrc/Ajax/index'].ts = factory()));
 }(this, function () { 'use strict';
 
   /*
@@ -151,4 +151,4 @@
   return SimpleAjax;
 
 }));
-//# sourceMappingURL=simpleAjax.js.map
+//# sourceMappingURL=index.ts.js.map
