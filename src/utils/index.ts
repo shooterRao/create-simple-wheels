@@ -30,7 +30,24 @@ export const assign = Object.assign
 export const createNode = (htmlStr: string): any => {
   const div = document.createElement('div');
   div.innerHTML = htmlStr;
-  return div.childNodes[0];
+  return div.children[0];
+};
+
+export type ElementObjType<T> = {
+  tagName: T;
+  className: string;
+}
+
+/**
+ * createNode
+ * @param {String} htmlStr
+ * @returns {DomNode}
+ */
+export const createElementByObj = <T extends keyof HTMLElementTagNameMap>(elementObj: ElementObjType<T>): HTMLElementTagNameMap[T] => {
+  const { tagName, className } = elementObj;
+  const element = document.createElement(tagName);
+  element.className = className;
+  return element;
 };
 
 /**

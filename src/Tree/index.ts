@@ -67,7 +67,6 @@ export default class SimpleTree implements SimpleTreeItf {
       baseNode: null,
       paddingLeft: 16,
       treeData: [],
-      frontIconClassName: null, // title前面的icon的className
       titleKey: "title", // 标题取对象哪个字段
       dblclick: null,
       click: null,

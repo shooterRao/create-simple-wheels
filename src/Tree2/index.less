@@ -1,0 +1,58 @@
+@font-size: 16px;
+@color-active: #2d8cf0;
+@bg-hover: #ecf5ff;
+@bg-active: #ecf5ff;
+@conent-height: 36px;
+@preClsName: simple-tree;
+
+.@{preClsName}.tree-wrapper {
+  width: 100%;
+  user-select: none; // 解决多次点击出现蓝色背景
+  ul {
+    list-style: none;
+  }
+
+    .tree-node {
+      transition: color 0.3s, background 0.3s;
+      line-height: @conent-height;
+      height: @conent-height;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      cursor: pointer;
+      &:hover {
+        background: @bg-hover;
+        // color: @color-active;
+        // cursor: pointer;
+      }
+      .tree-node-title {
+        padding-left: 3px;
+      }
+      &.active {
+        // font-style: italic;
+        // font-weight: bold;
+        color: @color-active;
+      }
+      &.active {
+        background: @bg-active;
+      }
+      .tree-node-icon.icon-angle {
+        display: inline-block;
+        cursor: pointer;
+        width: 0;
+        height: 0;
+        margin-left: 6px;
+        margin-right: 3px;
+        border: 5px solid transparent;
+        border-right-width: 0;
+        border-left-width: 6px;
+        border-left-color: #000;
+        transform: rotate(0);
+        transition: transform 0.3s ease;
+      }
+      .tree-node-icon.icon-angle.down {
+        transform: rotate(90deg);
+      }
+    }
+
+}

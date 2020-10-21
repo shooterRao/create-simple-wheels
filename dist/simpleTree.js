@@ -60,7 +60,7 @@
   var createNode = function (htmlStr) {
       var div = document.createElement('div');
       div.innerHTML = htmlStr;
-      return div.childNodes[0];
+      return div.children[0];
   };
   var hasChild = function (nodeData) {
       if (nodeData.children == null) {
@@ -90,7 +90,6 @@
               baseNode: null,
               paddingLeft: 16,
               treeData: [],
-              frontIconClassName: null,
               titleKey: "title",
               dblclick: null,
               click: null,

@@ -1,4 +1,4 @@
-## 树组件 (轻松渲染3000+节点)
+## 树组件 (支持渲染3000+节点)
 
 [预览DEMO](http://shooterblog.site/create-simple-wheels/src/Tree/index.html)
 
@@ -11,6 +11,20 @@
 - 支持空目录
 
 How to use?
+
+`Options`参数
+
+```ts
+interface SimpleTreeOptions {
+  baseNode: HTMLElement;
+  treeData: TreeData[];
+  paddingLeft: number;
+  titleKey: string; // 标题取对象哪个字段
+  dblclick?: (data: TreeData, e?: Event) => {};
+  click?: (data: TreeData, e?: Event) => {};
+  createNodeContent?: (node: ExtendNode, nodeData: TreeData) => void;
+}
+```
 
 ```javascript
 import { simpleTree } from 'simplewheels';
