@@ -38,7 +38,6 @@ const tree = new simpleTree2({
   baseNode: document.getElementById('tree'),
   treeData: treeData,
   titleKey: "title", // 读取节点data哪个字段渲染title
-  // 单击和双击，最好只选一种
   click({ nodeData }, event) {
 
   },
