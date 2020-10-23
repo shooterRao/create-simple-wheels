@@ -138,7 +138,7 @@
   var createNode = function (htmlStr) {
       var div = document.createElement('div');
       div.innerHTML = htmlStr;
-      return div.childNodes[0];
+      return div.children[0];
   };
   /**
    * 判断是否为dom节点
@@ -397,7 +397,6 @@
               baseNode: null,
               paddingLeft: 16,
               treeData: [],
-              frontIconClassName: null,
               titleKey: "title",
               dblclick: null,
               click: null,
@@ -733,13 +732,23 @@
               if (isArray(val)) {
                   key = key + '[]';
               }
-              if (isDate(val)) {
-                  val = val.toISOString();
+              var values = [];
+              if (Array.isArray(val)) {
+                  values = val;
+                  key += '[]';
               }
-              else if (isObject(val)) {
-                  val = JSON.stringify(val);
+              else {
+                  values = [val];
               }
-              parts.push(encode(key) + '=' + encode(val));
+              values.forEach(function (val) {
+                  if (isDate(val)) {
+                      val = val.toISOString();
+                  }
+                  else if (isObject(val)) {
+                      val = JSON.stringify(val);
+                  }
+                  parts.push(encode(key) + "=" + encode(val));
+              });
           });
           res = parts.join('&');
           return res;
@@ -807,7 +816,6 @@
               });
           timeout && isNumber(timeout) && (request.timeout = timeout);
           request.onreadystatechange = function handleOnLoad() {
-              // status 非0都为 resolve 状态
               if (request.readyState === 4) {
                   var responseData = responseType === 'text' ? request.responseText : request.response;
                   var responseHeaders = request.getAllResponseHeaders();

@@ -1,5 +1,5 @@
 export interface SimpleAjaxConfig {
-    method: 'get' | 'post' | 'put' | 'delete';
+    method: 'get' | 'post' | 'put' | 'delete' | 'patch';
     url: string;
     withCredentials?: boolean;
     responseType?: 'json' | 'text' | 'blob' | 'document' | 'arraybuffer';

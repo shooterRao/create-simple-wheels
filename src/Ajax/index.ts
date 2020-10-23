@@ -4,7 +4,7 @@
  */
 
 export interface SimpleAjaxConfig {
-  method: 'get' | 'post' | 'put' | 'delete';
+  method: 'get' | 'post' | 'put' | 'delete' | 'patch';
   url: string;
   withCredentials?: boolean;
   responseType?: 'json' | 'text' | 'blob' | 'document' | 'arraybuffer';
@@ -46,7 +46,7 @@ function SimpleAjax(config: SimpleAjaxConfig) {
 
     const parts: string[] = [];
 
-    Object.keys(params).forEach(function(key) {
+    Object.keys(params).forEach(function (key) {
       let val = params[key];
       if (val === null || typeof val === 'undefined') {
         return;
@@ -56,13 +56,22 @@ function SimpleAjax(config: SimpleAjaxConfig) {
         key = key + '[]';
       }
 
-      if (isDate(val)) {
-        val = val.toISOString();
-      } else if (isObject(val)) {
-        val = JSON.stringify(val);
+      let values: any[] = [];
+      if (Array.isArray(val)) {
+        values = val;
+        key += '[]';
+      } else {
+        values = [val];
       }
 
-      parts.push(encode(key) + '=' + encode(val));
+      values.forEach((val) => {
+        if (isDate(val)) {
+          val = val.toISOString();
+        } else if (isObject(val)) {
+          val = JSON.stringify(val);
+        }
+        parts.push(`${encode(key)}=${encode(val)}`);
+      });
     });
 
     res = parts.join('&');
@@ -70,7 +79,7 @@ function SimpleAjax(config: SimpleAjaxConfig) {
     return res;
   };
 
-  const buildURL = function(url: string, params: any) {
+  const buildURL = function (url: string, params: any) {
     if (!params) {
       return url;
     }
@@ -154,7 +163,7 @@ function SimpleAjax(config: SimpleAjaxConfig) {
 
     headers &&
       isObject(headers) &&
-      Object.keys(headers).forEach(function(key) {
+      Object.keys(headers).forEach(function (key) {
         request.setRequestHeader(key, headers[key]);
       });
 
